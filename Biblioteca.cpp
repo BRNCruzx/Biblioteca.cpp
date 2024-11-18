@@ -37,7 +37,7 @@ struct TpLivroAutor{
 	int id_livro, id_autor, status;
 };
 
-//Fun��es
+//FunÃ§Ãµes
 //Painel 
 void PainelPrincipal(void);
 void Moldura(int CI, int LI, int CF, int LF, int CorT, int CorF);
@@ -59,12 +59,6 @@ int MenuExcluir(void);
 
 
 
-
-
-
-
-
-
 //Cadastros
 void CadastroLivro(void);
 void CadastroAutor(void);
@@ -72,8 +66,6 @@ void CadastroEmprestimo(void);
 void CadastrarEndereco(TpEndereco *Endere);
 void CadastroPessoa(void);
 void CadastroLivroAutor(void);
-
-
 
 
 //Buscas
@@ -85,29 +77,42 @@ int BuscaIDLivroEmpres(FILE *Empres, int id );
 
 
 
-
-
-
-
-
 //Exibir 
 void ExibirPessoas(void) ;
 void ExibirLivros(void);
 void ExibirAutores(void);
 void ExibirEmprestimos(void);
 
+//Consulta
+void ConsultarLivro(void);
+void ConsultarAutor(void);
+void ConsultarPessoa(void);
+void ConsultarEmprestimo(void);
+void ConsultarLivroAutor(void);
 
 
+//Alterar
+void AlterarLivro(void);
+void AlterarAutor(void);
+void AlterarPessoa(void);
+void AlterarEmprestimo(void);
+void AlterarLivroAutor(void);
 
 
+//ExclusÃ£o LÃ³gica
+void ExclusaoLogicaLivro(void);
+void ExclusaoLogicaAutor(void);
+void ExclusaoLogicaPessoa(void);
+void ExclusaoLogicaEmprestimo(void);
+void ExclusaoLogicaLivroAutor(void);
 
 
-
-
-
-
-
-
+//Exclusao Fisica
+void ExclusaoFisicaLivro(void);
+void ExclusaoFisicaAutor(void);
+void ExclusaoFisicaPessoa(void);
+void ExclusaoFisicaEmprestimo(void);
+void ExclusaoFisicaLivroAutor(void);
 
 
 //Executar 
@@ -121,30 +126,6 @@ void Executar(void);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void Gotoxy(int x, int y) {
     COORD coord;
     coord.X = x;
@@ -152,29 +133,28 @@ void Gotoxy(int x, int y) {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-// Fun��o para limpar uma �rea retangular da tela
+// FunÃ§Ã£o para limpar uma Ã¡rea retangular da tela
 void limparArea(int x, int y, int largura, int altura) {
     for (int i = 0; i < altura; i++) {
-        Gotoxy(x, y + i); // Move o cursor para o in�cio de cada linha na �rea
+        Gotoxy(x, y + i); 
         for (int j = 0; j < largura; j++) {
-            printf(" "); // Imprime espa�os para "limpar" a linha da �rea especificada
+            printf(" "); 
         }
     }
 }
 void limparLinha(int x, int y, int largura) {
-    gotoxy(x, y); // Posiciona o cursor no in�cio da linha
+    gotoxy(x, y); 
     for (int i = 0; i < largura; i++) {
-        printf(" "); // Imprime espa�os para "limpar" a linha
+        printf(" "); 
     }
 }
     
 
 int main (void)
 {
-	// Define a localidade para Portugu?s-Brasil 
+	
     setlocale(LC_ALL, "pt_BR.UTF-8");
-  	limparArea(13, 13, 13, 10);
-    textcolor(15);// Define a cor do texto.
+    textcolor(15);
     Executar();
     return 0;
 }
@@ -256,17 +236,17 @@ void Moldura(int CI, int LI, int CF, int LF, int CorT, int CorF)
     textbackground(0);
 }
 
-// Fun��o que define o layout do painel principal com melhorias visuais.
+// FunÃ§Ã£o que define o layout do painel principal com melhorias visuais.
 void PainelPrincipal(void)
 {
     // Moldura principal com fundo cinza escuro e bordas verdes
     Moldura(10, 1, 115, 30, 15, 8);  // Verde para o texto, cinza escuro para o fundo
 
-    // Moldura secund�ria com fundo preto e bordas cinza claro
+    // Moldura secundÃ¡ria com fundo preto e bordas cinza claro
     Moldura(11, 2, 114, 4, 7, 0);   // Branco para o texto, fundo preto
     
-    textcolor(15); // Define a cor do texto para o t�tulo.
-    gotoxy(50, 3); printf("BIBLIOTECA"); // T�tulo no painel.
+    textcolor(15); // Define a cor do texto para o tÃ­tulo.
+    gotoxy(50, 3); printf("BIBLIOTECA"); // TÃ­tulo no painel.
 
     // Molduras internas
     Moldura(11, 5, 50, 26, 10, 0); // Verde claro para o texto, fundo preto
@@ -504,8 +484,8 @@ char MenuLivroAutor(void){
 
 int MenuExcluir(void){
 	int op;
-	gotoxy(70,40);printf("[1]- Exclus�o Logica\n");
-	gotoxy(70,41);printf("[2]- Exclus�o F�sica\n");
+	gotoxy(70,40);printf("[1]- ExclusÃ£o Logica\n");
+	gotoxy(70,41);printf("[2]- ExclusÃ£o FÃ­sica\n");
 	gotoxy(70,42);printf("[3]- Sair");
 	fflush(stdin);
 	gotoxy(21,28);return scanf("%d", &op);
@@ -530,7 +510,7 @@ void CadastroLivro(void){
 				gotoxy(53,8);printf("TITULO:");
 				fflush(stdin);
 				gotoxy(60,8);gets(Reg.titulo);
-				gotoxy(53,9);printf("Ano da publica��o:");
+				gotoxy(53,9);printf("Ano da publicaÃ§Ã£o:");
 				gotoxy(71,9);scanf("%d", &Reg.ano_publicacao);
 				Reg.status = 1;
 				fwrite(&Reg , sizeof(TpLivro),1,Livro);
@@ -543,7 +523,7 @@ void CadastroLivro(void){
 			else{	
 				limparArea(51, 5, 60,10 );
 				textcolor(4);
-				gotoxy(22,28);printf("ID de livro j� est� cadastrado!!!");
+				gotoxy(22,28);printf("ID de livro jÃ¡ estÃ¡ cadastrado!!!");
 				Sleep(1700);
 				limparLinha(21,28 , 50);
 			}
@@ -595,7 +575,7 @@ void CadastroAutor(void){
 			}
 			else{
 				textcolor(4);
-				gotoxy(22,28);printf("ID de Autor j� cadastrado!!!");
+				gotoxy(22,28);printf("ID de Autor jÃ¡ cadastrado!!!");
 				
 			}
 			
@@ -631,7 +611,7 @@ void CadastroPessoa(void){
 				gotoxy(56,8);printf("Nome:");
 				fflush(stdin);
 				gotoxy(61,8);gets(Pess.nome);
-				gotoxy(56,9);printf("N�mero de telefone:");
+				gotoxy(56,9);printf("NÃºmero de telefone:");
 				gotoxy(75,9);scanf("%d", &Pess.telefone);
 				CadastrarEndereco(&Pess.Endere);
 				Pess.status = 1;
@@ -660,7 +640,7 @@ void CadastroPessoa(void){
 
 void CadastrarEndereco(TpEndereco *Endere){
 	
-	gotoxy(53,10);printf("-------------------------Endere�o-----------------------");
+	gotoxy(53,10);printf("-------------------------EndereÃ§o-----------------------");
 	gotoxy(56,11);printf("Rua:");
 	fflush(stdin);
 	gotoxy(61,11);gets(Endere->rua);
@@ -681,7 +661,7 @@ void CadastrarEndereco(TpEndereco *Endere){
 	gotoxy(56,16);printf("Estado:");
 	fflush(stdin);
 	gotoxy(63,16);gets(Endere->estado);
-	gotoxy(56,17);printf("Pa�s:");
+	gotoxy(56,17);printf("PaÃ­s:");
 	fflush(stdin);
 	gotoxy(62,17);gets(Endere->pais);
 	gotoxy(53,18);printf("--------------------------------------------------------");
@@ -689,8 +669,6 @@ void CadastrarEndereco(TpEndereco *Endere){
 }
 void CadastroEmprestimo(void){
 	TpEmprestimo Emp;
-	TpLivro Liv;
-	TpPessoa Pess;
 	FILE *Empres,*Livro ,*Pessoa ;
 	
 	Empres = fopen("Emprestimos.dat","ab+");
@@ -728,21 +706,21 @@ void CadastroEmprestimo(void){
 					}
 					else{
 						textcolor(4);
-						gotoxy(22,28);printf("Pessoa n�o encontrada");
+						gotoxy(22,28);printf("Pessoa nÃ£o encontrada");
 						Sleep(1.5);
 						
 			
 					}
 				}else{
 					textcolor(4);
-					gotoxy(22,28);printf("Livro n�o encontrado ou j� esta emprestado !!!");
+					gotoxy(22,28);printf("Livro nÃ£o encontrado ou jÃ¡ esta emprestado !!!");
 					Sleep(1.5);
 				
 				}
 			}
 			else{
 				textcolor(4);
-				gotoxy(22,28);printf("ID de emprestimo j� cadastrado!!!");
+				gotoxy(22,28);printf("ID de emprestimo jÃ¡ cadastrado!!!");
 				Sleep(1.5);
 				
 			}
@@ -762,13 +740,11 @@ void CadastroEmprestimo(void){
 
 void CadastroLivroAutor(void){
     TpLivroAutor LA;
-    TpLivro Liv;
-    TpAutor Aut;
     FILE *LivAut = fopen("LivroAutor.dat", "ab+");
     FILE *Livro = fopen("Livro.dat", "rb");
     FILE *Autor = fopen("Autor.dat", "rb");
 
-    // Verifica��o de abertura dos arquivos
+    // VerificaÃ§Ã£o de abertura dos arquivos
     if(LivAut == NULL || Livro == NULL || Autor == NULL){
         textcolor(4);
         gotoxy(22,28); 
@@ -782,13 +758,13 @@ void CadastroLivroAutor(void){
         
     }
 	else {
-    	// Verifica��o de registros no arquivo de livros e autores
+    	// VerificaÃ§Ã£o de registros no arquivo de livros e autores
 		fseek(Livro, 0, SEEK_END);
 		fseek(Autor, 0, SEEK_END);
 		if(ftell(Livro) == 0 || ftell(Autor) == 0){
 		    textcolor(4);
 		    gotoxy(28,28); 
-		    printf("N�o tem livros ou autores cadastrados para associar!!!");
+		    printf("NÃ£o tem livros ou autores cadastrados para associar!!!");
 		    fclose(Livro);
 		    fclose(Autor);
 		    textcolor(15);
@@ -797,7 +773,7 @@ void CadastroLivroAutor(void){
         
     	}
 		else{
-	    		// Cadastro de associa��o livro e autor
+	    		// Cadastro de associaÃ§Ã£o livro e autor
 		    limparArea(51, 5, 60, 10);
 		    gotoxy(56,7); 
 		    printf("Digite o id do Livro:");
@@ -811,18 +787,18 @@ void CadastroLivroAutor(void){
 			            gotoxy(56,8); 
 			            scanf("%d", &LA.id_autor);
 			            if(BuscaIDAutor(Autor, LA.id_autor) != -1){
-			                // Escreve a associa��o no arquivo LivroAutor
+			                // Escreve a associaÃ§Ã£o no arquivo LivroAutor
 			                fwrite(&LA, sizeof(TpLivroAutor), 1, LivAut);
 			                textcolor(10);
 			                gotoxy(22,28); 
-			                printf("Associa��o Livro-Autor cadastrada!!!");
+			                printf("AssociaÃ§Ã£o Livro-Autor cadastrada!!!");
 			                LA.status = 1;
 			                Sleep(1500);
 			                limparLinha(24,28 , 50);
 			            } else {
 			                textcolor(4);
 			                gotoxy(28,28); 
-			                printf("Autor n�o encontrado");
+			                printf("Autor nÃ£o encontrado");
 			                Sleep(1.5);
 			                limparLinha(24,28 , 50);
 			            }
@@ -830,7 +806,7 @@ void CadastroLivroAutor(void){
 				else {
 			            textcolor(4);
 			            gotoxy(28,28); 
-			            printf("Livro n�o encontrado !!!");
+			            printf("Livro nÃ£o encontrado !!!");
 			            Sleep(1.5);
 			            limparLinha(24,28 , 50);
 			    }
@@ -942,7 +918,7 @@ void ExibirLivros(void) {
 	else {
         fread(&Liv, sizeof(TpLivro), 1, Livro);
         while (!feof(Livro)) {
-            // Verifica se o livro n�o foi exclu�do (status != 0)
+            // Verifica se o livro nÃ£o foi excluÃ­do (status != 0)
             if (Liv.status != 0) {
                 gotoxy(52, linha );
                 printf("ID: %d", Liv.id_livro);
@@ -952,7 +928,7 @@ void ExibirLivros(void) {
                 printf("Ano: %d", Liv.ano_publicacao);
                 gotoxy(52, linha + 3);
                 printf("-----------------------------------");
-                Sleep(2000); // Ajuste o tempo conforme necess�rio
+                Sleep(2000); // Ajuste o tempo conforme necessÃ¡rio
                	linha +=4;
             }
              if(linha == 26){
@@ -979,7 +955,7 @@ void ExibirAutores(void){
         textcolor(15);
     }
     else {
-        // Verificando se o arquivo est� vazio
+        // Verificando se o arquivo estÃ¡ vazio
         fseek(Autor, 0, SEEK_END);
         if (ftell(Autor) == 0) {
             textcolor(4);
@@ -992,14 +968,14 @@ void ExibirAutores(void){
             
         }
 		else{
-	        // Volta para o in�cio do arquivo para come�ar a leitura
+	        // Volta para o inÃ­cio do arquivo para comeÃ§ar a leitura
 	        fseek(Autor, 0, SEEK_SET);
 	        limparArea(51, 5, 60, 10);
 	        textcolor(15);
-	        int linha = 6; // Define onde a lista come�a na tela
+	        int linha = 6; // Define onde a lista comeÃ§a na tela
 			fread(&Aut, sizeof(TpAutor), 1, Autor);
 	        while (!feof(Autor)) {
-	            if (Aut.status == 1) { // Se o autor est� ativo
+	            if (Aut.status == 1) { // Se o autor estÃ¡ ativo
 		            gotoxy(52, linha);
 		            printf("------------------------------------------");
 	                gotoxy(52, linha+1);
@@ -1027,8 +1003,6 @@ void ExibirAutores(void){
 }
 void ExibirPessoas(void) {
     TpPessoa Pess;
-    TpEndereco End;
-    int pos;
     FILE *Pessoa = fopen("pessoas.dat", "rb");
 
     if (Pessoa == NULL ) {
@@ -1051,7 +1025,7 @@ void ExibirPessoas(void) {
 		        printf("Nome: %s", Pess.nome);
 		        gotoxy(52, linha+7);
 		        printf("Telefone: %d", Pess.telefone);
-		        gotoxy(52,linha+8);printf("-------------------------Endere�o-----------------------");
+		        gotoxy(52,linha+8);printf("-------------------------EndereÃ§o-----------------------");
 		        gotoxy(52,linha+9);
 		        printf("Rua: %s", Pess.Endere.rua);
 		        gotoxy(52, linha+10);
@@ -1102,7 +1076,7 @@ void ExibirEmprestimos(void) {
        
     }
 	else{
-	    	// Verificando se h� registros no arquivo de empr�stimos
+	    	// Verificando se hÃ¡ registros no arquivo de emprÃ©stimos
 	    fseek(Empres, 0, SEEK_END);
 	    if (ftell(Empres) == 0) {
 	        textcolor(4);
@@ -1115,29 +1089,29 @@ void ExibirEmprestimos(void) {
 	        fclose(Pessoa);
 	    
 	    }else {
-			// Volta para o in�cio do arquivo de empr�stimos
+			// Volta para o inÃ­cio do arquivo de emprÃ©stimos
 		    fseek(Empres, 0, SEEK_SET);
 		
 		    limparArea(51, 5, 60, 10);
 		    textcolor(15);
-		    int linha = 6; // Define onde a lista come�a na tela
+		    int linha = 6; // Define onde a lista comeÃ§a na tela
 			fread(&Emp, sizeof(TpEmprestimo), 1, Empres);
 		    while (!feof(Empres)) {
 		    	if(Emp.status !=0){
-			    		 // Verifica se o empr�stimo tem um livro v�lido e uma pessoa v�lida
+			    		 // Verifica se o emprÃ©stimo tem um livro vÃ¡lido e uma pessoa vÃ¡lida
 			        if (BuscaIDLivro(Livro, Emp.id_livro) != -1 && BuscaIDPessoa(Pessoa, Emp.id_pessoa) != -1) {
 			            // Busca o nome da pessoa
 			            fseek(Pessoa, (Emp.id_pessoa - 1) * sizeof(TpPessoa), SEEK_SET); // Posiciona no registro da pessoa
 			            fread(&Pess, sizeof(TpPessoa), 1, Pessoa);
 			            fseek(Livro, (Emp.id_livro - 1) * sizeof(TpLivro), SEEK_SET); 
 			            fread(&Liv,sizeof(TpPessoa),1,Livro);
-			            // Exibe as informa��es do empr�stimo
+			            // Exibe as informaÃ§Ãµes do emprÃ©stimo
 			            gotoxy(56, linha);
 			            printf("------------------------------------------");
 			            gotoxy(56, linha + 1);
-			            printf("ID Empr�stimo: %d", Emp.id_emprestimo);
+			            printf("ID EmprÃ©stimo: %d", Emp.id_emprestimo);
 			            gotoxy(56, linha + 2);
-			            printf("Livro: %s", Liv.titulo);  // Aqui voc� pode buscar mais informa��es do livro, como o t�tulo, se necess�rio
+			            printf("Livro: %s", Liv.titulo);  
 			            gotoxy(56, linha + 3);
 			            printf("Pessoa: %s", Pess.nome);
 			            gotoxy(56, linha+4);
@@ -1161,6 +1135,174 @@ void ExibirEmprestimos(void) {
     textcolor(15);
 }
 
+void ConsultarLivro(void){
+	TpLivro Liv;
+	FILE *Livro = fopen("Livro.dat","rb");
+	if(Livro == NULL){
+		textcolor(4);
+		gotoxy(22,28);printf("Erro ao abrir arquivo!!!");
+		fclose(Livro);
+		Sleep(2000);
+	}else{
+		fseek(Livro,0,2);
+		if(ftell(Livro) == 0){
+			textcolor(4);
+			gotoxy(22,28);
+			printf("NÃ£o tem nenhum livro cadastrado!!!");
+			fclose(Livro);
+			Sleep(2000);
+		}
+		else {
+			printf("Digite o ID do livro");
+			scanf("%d", &Liv.id_livro);
+			while(Liv.id_livro != 0){
+				int pos = BuscaIDLivro(Livro,Liv.id_livro);
+				if( pos != -1){
+					if(Liv.status == 1){
+						fseek(Livro, pos, 0);
+						fread(&Liv, sizeof(TpLivro),1, Livro);
+						printf("Livro: %s",Liv.titulo);
+						printf("Ano publicado: %d",Liv.ano_publicacao);
+						//// Fazer a busca completa do livro se ele esta emprestado  e qual Ã© Autor que esta associado com ele 
+					
+					}
 
+				}else{
+					textcolor(4);
+					gotoxy(22,28);printf("Livro nÃ£o encontrado!!!");
+					Sleep(2000);
+				}
+				limparArea(51, 5, 60, 10);
+				printf("Digite o ID do livro");
+				scanf("%d", &Liv.id_livro);
+			}
+		}
+	}
+	fclose(Livro);
+	limparArea(51, 5, 60, 10);
 
+}
+void ConsultarAutor(){
+	TpAutor Aut;
+	FILE *Autor = fopen ("Autor.dat","rb");
+	if(Autor == NULL){
+		textcolor(4);
+		gotoxy(22,28);printf("Erro ao abrir arquivo!!!");
+		fclose(Autor);
+		Sleep(2000);
+		limparLinha(21,28 , 50);
+	}
+	else{
+		
+		fseek(Autor, 0, SEEK_END);
+        if (ftell(Autor) == 0) {
+            textcolor(4);
+            gotoxy(22, 28);
+            printf("Nenhum autor cadastrado!");
+            fclose(Autor);
+			Sleep(1500);
+            limparLinha(24, 28, 50);
+            textcolor(15);
+        }
+		else{
+			printf("Digite o ID do autor:");
+			scanf("%d", &Aut.id_autor);
+			while(Aut.id_autor != 0){
+				int pos = BuscaIDAutor(Autor, Aut.id_autor);
+				if(pos != -1){
+					fseek(Autor,pos,0);
+					fread(&Aut, sizeof(TpAutor),1,Autor);
+					if(Aut.status == 1){
+						printf("--------------------------------------------------------------");
+						printf("Nome: %s",Aut.nome);
+						printf("Nacionalidade: %s",Aut.nacionalidade);
+						//precisa fazer uma busca no livro Auotor e buscar todos os dados desse Autor e printar e sempre verificar se esta com status 1
+					}
+					
+				}else{
+					textcolor(4);
+					printf("Autor nÃ£o encontrado!!!");
+					Sleep(2000);
+            		limparLinha(24, 28, 50);
+				}
+				printf("Digite o ID do autor:");
+				scanf("%d", &Aut.id_autor);
+			}
 
+		}
+	}
+}
+/// Fazer os consultar igual os de cima Usar outras busca para o consultar Fazer a busca Binaria para arquivo , mas primeiro Ã© preciso fazer entrando ordenado que ainda nÃ£o foi imprementado no cÃ³digo
+void ConsultarPessoa(){
+
+}
+void ConsultarEmprestimo(){
+
+}
+void ConsultarLivroAutor(){
+
+}
+void AlterarLivro(){
+	
+}
+void AlterarAutor(){
+
+}
+void AlterarPessoa(){
+
+}
+void AlterarEmprestimo(){
+
+}
+void ALterarLivroAutor(){
+
+}
+
+void ExclusaologicaLivro(){
+
+}
+void ExclusaoLogicaAutor(){
+
+}
+void ExclusaoLogicaPessoa(){
+
+}
+void ExclusaoLogicaemprestimo(){
+
+}
+void ExclusaoLogicaLivroAutor(){
+
+}
+void ExclusaoFisicaLivro(){
+
+}
+void ExclusaoFisicaAuotor(){
+
+}
+void exclusaoFisicaPessoa(){
+
+}
+void ExclusaoFisicaEmprestimo(){
+
+}
+void ExclusaoFisicaLivroAutor(){
+
+}
+int BucaBinariaLivro(){
+
+}
+int BuscaBinariaAutor(){
+
+}
+int BuscaBinariaPessoa(){
+
+}
+int BuscaBinariaEmprestimo(){
+
+}
+int BuscaBinariaLivroAutor(){
+
+}
+//Fazer as outras buscas 
+
+// Fazer as oderanaÃ§Ãµes 
