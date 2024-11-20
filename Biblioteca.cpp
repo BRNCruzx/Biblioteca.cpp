@@ -4,9 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <locale.h> 
 #include <windows.h>
 #include <unistd.h>
+#include <locale.h>
+
 
 #define TAM 50
 
@@ -104,7 +105,7 @@ void AlterarLivro(void);
 void AlterarAutor(void);
 void AlterarPessoa(void);
 void AlterarEmprestimo(void);
-void AlterarLivroAutor(void);
+
 
 
 //ExclusÃ£o LÃ³gica
@@ -306,14 +307,12 @@ void ExecutarLivro(void){
 			case'C':
 				ConsultarLivro();
 				break;
-//			case'D'
-//				AlterarLivro();
-//				break;
+			case'D':
+				AlterarLivro();
+				break;
 //			case'E':
 //				ExcluirLivro();
 //				break;
-//			
-				
 
 		}
 	}while(op != 27);
@@ -332,9 +331,9 @@ void ExecutarAutor(void){
 			case'C':
 				ConsultarAutor();
 				break;
-//			case'D'
-//				AlterarLivro();
-//				break;
+			case'D':
+				AlterarAutor();
+				break;
 //			case'E':
 //				ExcluirLivro();
 //				break;
@@ -356,9 +355,9 @@ void ExecutarEmprestimo(void){
 			case'C':
 				ConsultarEmprestimo();
 				break;
-//			case'D'
-//				AlterarEmprestimo();
-//				break;
+			case'D':
+				AlterarEmprestimo();
+				break;
 //			case'E':
 //				ExcluirEmprestimo();
 //				break;
@@ -381,9 +380,9 @@ void ExecutarPessoa(void){
 			case'C':
 				ConsultarPessoa();
 				break;
-//			case'D':
-//				AlterarPessoa();
-//				break;
+			case'D':
+				AlterarPessoa();
+				break;
 //			case'E':
 //				ExcluirPessoa();
 //				break;
@@ -404,10 +403,10 @@ void ExecutarLivroAutor(void){
 				break;
 			case'C':
 				ConsultarLivroAutor();
-				break;
-//			case'D':
-//				AlterarLivroAutor();
-//				break;
+				break;			// case'D':
+			// 	AlterarLivroAutor();
+		
+	// 	break;
 //			case'E':
 //				ExcluirLivroAutor();
 //				break;
@@ -1458,9 +1457,9 @@ void ConsultarAutor(){
 	fclose(Pessoa);
  }
 void ConsultarLivroAutor(){
-TpLivro Liv;
-TpAutor Aut;
-TpLivroAutor LA;
+	TpLivro Liv;
+	TpAutor Aut;
+	TpLivroAutor LA;
 	FILE *LivAut = fopen("LivroAutor.dat","rb");
 	FILE *Livro = fopen("Livro.dat","rb");
 	FILE *Autor = fopen("Autor.dat","rb");
@@ -1522,24 +1521,216 @@ TpLivroAutor LA;
 	fclose(Livro);
 	limparArea(53, 5, 58, 20);
  }
-// void AlterarLivro(){
+void AlterarLivro(){
+ 	int pos;
+	TpLivro Liv;
+ 	FILE * alteraLiv = fopen("Livro.dat","rb+");
+ 	if(alteraLiv==NULL){
+ 		textcolor(4);
+		gotoxy(22,28); printf("Erro ao abrir arquivo!");
+		fclose(alteraLiv);
+		Sleep(2000);
+		limparLinha(24, 28, 50);
+ 	} else {
+ 		gotoxy(52,7); printf("ID do Livro:");
+ 		gotoxy(64,7); scanf("%d", &Liv.id_livro);
+ 		while(Liv.id_livro !=0){
+ 			pos=BuscaIDLivro(alteraLiv, Liv.id_livro);
+ 			if(pos==-1) {
+				textcolor(4);
+ 				gotoxy(22,28);printf("Livro nao cadastrado\n");
+				Sleep(2000);
+				limparLinha(24, 28, 50);
+ 			} else {
+ 				fseek(alteraLiv, pos, 0);
+				fread(&Liv ,sizeof(TpLivro),1, alteraLiv);
+			 	gotoxy(52,8); printf("ID: %d | Titulo: %s\n", Liv.id_livro, Liv.titulo);
+			 	gotoxy(52,9); printf("Deseja alterar?");
+				gotoxy(64,9);
+			 	if(toupper(getche())=='S') {
+					gotoxy(52,11); printf("Novo titulo:");
+					fflush(stdin);
+					Gotoxy(64,10);gets(Liv.titulo);
+					fseek(alteraLiv, pos,0);
+					fwrite(&Liv, sizeof(TpLivro),1 , alteraLiv);
+					gotoxy(22,28); printf("Dados alterados!");
+					fseek(alteraLiv, pos,0);
+					fread(&Liv, sizeof(TpLivro), 1, alteraLiv);
+					gotoxy(52,11); printf("ID: %d | Titulo: %s\n", Liv.id_livro, Liv.titulo);
+			 	}
+ 			}
+			Sleep(2000);
+			limparLinha(24, 28, 50);
+			textcolor(15);
+			limparArea(51, 5, 61, 20);
+ 			gotoxy(52,7); printf("ID do Livro:\n");
+ 			gotoxy(64,7); scanf("%d", &Liv.id_livro);
+ 		}
+ 		fclose(alteraLiv);
+ 	}
+	limparArea(51, 5, 61, 20);
+	fclose(alteraLiv);
+}
+void AlterarAutor(){
+	int pos;
+	TpAutor autor;
+ 	FILE * alteraAutor = fopen("Autor.dat","rb+");
 	
-// }
-// void AlterarAutor(){
+ 	if(alteraAutor==NULL){
+ 		textcolor(4);
+		gotoxy(22,28); printf("Erro ao abrir arquivo!");
+		fclose(alteraAutor);
+		Sleep(2000);
+		limparLinha(24, 28, 50);
+ 	} else {
+ 		gotoxy(52,7); printf("ID do Autor:\n");
+ 		gotoxy(74,7); scanf("%d", &autor.id_autor);
+ 		while(autor.id_autor !=0){
+ 			pos=BuscaIDAutor(alteraAutor, autor.id_autor);
+ 			if(pos==-1) {
+				textcolor(4);
+ 				printf("Autor nao cadastrado\n");
+				Sleep(2000);
+				limparLinha(24, 28, 50);
+ 			} else {
+ 				fseek(alteraAutor, pos, 0);
+				fread(&autor ,sizeof(TpAutor),1, alteraAutor);
+			 	gotoxy(52,8); printf("ID: %d | Nome: %s\n", autor.id_autor, autor.nome);
+			 	gotoxy(52,7); printf("Deseja alterar?");
+				gotoxy(67,7);
+			 	if(toupper(getche())=='S') {
+					gotoxy(52,8); printf("Novo nome:");
+					fflush(stdin);
+					gotoxy(63,8);gets(autor.nome);
+					fseek(alteraAutor, pos,0);
+					fwrite(&autor, sizeof(TpAutor),1 , alteraAutor);
+					textcolor(10);
+					gotoxy(22,28);printf("Dados alterados!");
+					limparLinha(24, 28, 50);
+					fseek(alteraAutor, pos,0);
+					fread(&autor, sizeof(TpAutor), 1, alteraAutor);
+					gotoxy(52,9); printf("ID: %d | Nome: %s\n", autor.id_autor, autor.nome);
+			 	}
+ 			}
+			Sleep(2000);
+			textcolor(15);
+			limparArea(51, 5, 61, 20);
+ 			gotoxy(52,7); printf("ID do Autor:\n");
+ 			gotoxy(74,7); scanf("%d", &autor.id_autor);
+ 		}
+ 		fclose(alteraAutor);
+ 	}
+	limparArea(51, 5, 61, 20);
+	fclose(alteraAutor);
+ 	
+}
+void AlterarPessoa(){
+	int pos;
+	TpPessoa pessoa;
+ 	FILE * alteraPessoa = fopen("Pessoa.dat","rb+");
+ 	if(alteraPessoa==NULL){
+ 		textcolor(4);
+		gotoxy(22,28); printf("Erro ao abrir arquivo!");
+		fclose(alteraPessoa);
+		Sleep(2000);
+		limparLinha(24, 28, 50);
+ 	} else {
+ 		gotoxy(52,7); printf("ID da pessoa:\n");
+ 		gotoxy(74,7); scanf("%d", &pessoa.id_pessoa);
+ 		while(pessoa.id_pessoa !=0){
+ 			pos=BuscaIDPessoa(alteraPessoa, pessoa.id_pessoa);
+ 			if(pos==-1) {
+				textcolor(4);
+ 				printf("Pessoa nao cadastrado\n");
+				Sleep(2000);
+				limparLinha(24, 28, 50);
+ 			} else {
+ 				fseek(alteraPessoa, pos, 0);
+				fread(&pessoa ,sizeof(TpPessoa),1, alteraPessoa);
+			 	gotoxy(52,8); printf("ID: %d | Nome: %s | Telefone: %d", pessoa.id_pessoa, pessoa.nome, pessoa.telefone);
+			 	gotoxy(52,7); printf("Deseja alterar?");
+			 	if(toupper(getche())=='S') {
+					gotoxy(52,9); printf("Novo nome:");
+					fflush(stdin);
+					gotoxy(64,9);gets(pessoa.nome);
+					gotoxy(52,10);printf("Novo Telefone:");
+					gotoxy(70,10);scanf("%d", &pessoa.telefone);
+					fseek(alteraPessoa, pos,0);
+					fwrite(&pessoa, sizeof(TpPessoa),1 , alteraPessoa);
+					gotoxy(52,10); printf("Dados alterados!");
+					fseek(alteraPessoa, pos,0);
+					fread(&pessoa, sizeof(TpPessoa), 1, alteraPessoa);
+					gotoxy(52,8); printf("ID: %d | Nome: %s | Telefone: %d", pessoa.id_pessoa, pessoa.nome, pessoa.telefone);
+			 	}
+ 			}
+			Sleep(2000);
+			textcolor(15);
+			limparArea(51, 5, 61, 20);
+ 			gotoxy(52,7); printf("ID da Pessoa:\n");
+ 			gotoxy(74,7); scanf("%d", &pessoa.id_pessoa);
+ 		}
+ 		fclose(alteraPessoa);
+ 	}
+	fclose(alteraPessoa);
+ 	getch();
+}
 
-// }
-// void AlterarPessoa(){
-
-// }
-// void AlterarEmprestimo(){
-
-// }
-// void ALterarLivroAutor(){
-
-// }
+void AlterarEmprestimo(){
+	TpEmprestimo emprestimo;
+	FILE *alteraEmprestimo = fopen("Emprestimo.dat","rb+");
+	FILE *Livro = fopen("livros.dat","rb+");
+ 	if(alteraEmprestimo==NULL){
+ 		textcolor(4);
+		gotoxy(22,28); printf("Erro ao abrir arquivo!");
+		fclose(alteraEmprestimo);
+		Sleep(2000);
+		limparLinha(24, 28, 50);
+ 	} else {
+ 		gotoxy(52,7); printf("ID do Emprestimo:");
+ 		gotoxy(74,7); scanf("%d", &emprestimo.id_emprestimo);
+ 		while(emprestimo.id_emprestimo !=0){
+ 			 int pos=BuscaIDEmprestimo(alteraEmprestimo, emprestimo.id_emprestimo);
+ 			if(pos==-1) {
+				textcolor(4);
+ 				printf("Emprestimo nao encontrado\n");
+				Sleep(2000);
+				limparLinha(24, 28, 50);
+ 			} else {
+ 				fseek(alteraEmprestimo, pos, 0);
+				fread(&emprestimo ,sizeof(TpEmprestimo), 1, alteraEmprestimo);
+			 	gotoxy(52,8); printf("ID: %d | ID_Livro: %d", emprestimo.id_emprestimo, emprestimo.id_emprestimo);
+			 	gotoxy(52,7); printf("Deseja alterar?");
+			 	if(toupper(getche())=='S') {
+					gotoxy(52,9); printf("Novo ID Livro:  ");
+					gotoxy(63,9);scanf("%d", &emprestimo.id_livro);
+					if(BuscaIDLivro(Livro, emprestimo.id_livro)!= -1){
+						fseek(alteraEmprestimo, pos,0);
+						fwrite(&emprestimo, sizeof(TpEmprestimo),1 , alteraEmprestimo);
+						gotoxy(52,10); printf("Dados alterados!");
+						fseek(alteraEmprestimo, pos,0);
+						fread(&emprestimo, sizeof(TpEmprestimo), 1, alteraEmprestimo);
+						gotoxy(52,8); printf("ID: %d | ID_Livro: %d", emprestimo.id_pessoa , emprestimo.id_livro);
+					}else{
+						textcolor(4);
+						printf("Livro não encontrado!!!!");
+						limparLinha(24, 28, 50);
+					}
+			 	}
+ 			}
+			Sleep(2000);
+			textcolor(15);
+			limparArea(51, 5, 61, 20);
+ 			gotoxy(52,7); printf("ID do Emprestimo:\n");
+ 			gotoxy(74,7); scanf("%d", &emprestimo.id_emprestimo);
+ 		}
+ 		fclose(alteraEmprestimo);
+ 	}
+ 	fclose(Livro);
+	fclose(alteraEmprestimo);;
+}
 
 // void ExclusaologicaLivro(){
-
+// 	TpLivro
 // }
 // void ExclusaoLogicaAutor(){
 
