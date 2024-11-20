@@ -77,14 +77,19 @@ int BuscaIDLivroEmpres(FILE *Empres, int id );
 
 
 //Odenação direta 
-// void InsDiretaLivro(FILE *Livro);
+void InsDiretaLivro(FILE *Livro);
+void InsDiretaAutor(FILE *Autor);
+void InsDiretaLivroAutor(FILE *LivAut);
+void InsDiretaEmprestimo(FILE *Empres);
+void InsDiretaPessoa(FILE *Pessoa);
 
 
 //Exibir 
-void ExibirPessoas(void) ;
+void ExibirPessoas(void);
 void ExibirLivros(void);
 void ExibirAutores(void);
 void ExibirEmprestimos(void);
+void ExibirLivroAutor(void);
 
 //Consulta
 void ConsultarLivro(void);
@@ -111,11 +116,11 @@ void ExclusaoLogicaLivroAutor(void);
 
 
 //Exclusao Fisica
-void ExclusaoFisicaLivro(void);
-void ExclusaoFisicaAutor(void);
-void ExclusaoFisicaPessoa(void);
-void ExclusaoFisicaEmprestimo(void);
-void ExclusaoFisicaLivroAutor(void);
+// void ExclusaoFisicaLivro(void);
+// void ExclusaoFisicaAutor(void);
+// void ExclusaoFisicaPessoa(void);
+// void ExclusaoFisicaEmprestimo(void);
+// void ExclusaoFisicaLivroAutor(void);
 
 
 //Executar 
@@ -324,9 +329,9 @@ void ExecutarAutor(void){
 			case'B':
 				ExibirAutores();
 				break;
-		//	case'C':
-////				ConsultarLivro();
-////				break;
+			case'C':
+				ConsultarAutor();
+				break;
 //			case'D'
 //				AlterarLivro();
 //				break;
@@ -348,9 +353,9 @@ void ExecutarEmprestimo(void){
 			case'B':
 				ExibirEmprestimos();
 				break;
-//			case'C':
-//				ConsultarEmprestimo();
-//				break;
+			case'C':
+				ConsultarEmprestimo();
+				break;
 //			case'D'
 //				AlterarEmprestimo();
 //				break;
@@ -394,12 +399,12 @@ void ExecutarLivroAutor(void){
 			case'A':
 				CadastroLivroAutor();
 				break;
-		//	case'B':
-//				ExibirLivroAutor();
-//				break;
-//			case'C':
-//				ConsultarLivroAutor();
-//				break;
+			case'B':
+				ExibirLivroAutor();
+				break;
+			case'C':
+				ConsultarLivroAutor();
+				break;
 //			case'D':
 //				AlterarLivroAutor();
 //				break;
@@ -496,7 +501,7 @@ int MenuExcluir(void){
 //Cadastros
 void CadastroLivro(void){
 	TpLivro Reg;
-	FILE *Livro = fopen("Livro.dat","ab+");
+	FILE *Livro = fopen("Livro.dat","rb+");
 	if(Livro == NULL){
 		textcolor(4);
 		gotoxy(22,30);printf("Erro ao abrir Arquivo!!!");
@@ -506,8 +511,8 @@ void CadastroLivro(void){
 	}
 	else{
 		textcolor(15);
-		gotoxy(53,7);printf("Digite o id do Livro:\n");
-		gotoxy(74,7);scanf("%d", &Reg.id_livro);
+		gotoxy(53,7);printf("Digite o id do Livro ou [0] SAIR:");
+		gotoxy(86,7);scanf("%d", &Reg.id_livro);
 		while(Reg.id_livro != 0){
 			if(BuscaIDLivro(Livro,Reg.id_livro)== -1){
 				gotoxy(53,8);printf("TITULO:");
@@ -516,8 +521,9 @@ void CadastroLivro(void){
 				gotoxy(53,9);printf("Ano da publicacao:");
 				gotoxy(72,9);scanf("%d", &Reg.ano_publicacao);
 				Reg.status = 1;
+				fseek(Livro,0,2);
 				fwrite(&Reg , sizeof(TpLivro),1,Livro);
-				// InsDiretaLivro(Livro);
+				InsDiretaLivro(Livro);
 				textcolor(10);
 				gotoxy(22,28);printf("Livro Cadastrado!!!");
 				Sleep(1700);
@@ -533,8 +539,8 @@ void CadastroLivro(void){
 			}
 			limparArea(51, 5, 60,10 );
 			textcolor(15);
-			gotoxy(53,7);printf("Digite o id do Livro:\n");
-			gotoxy(75,7);scanf("%d", &Reg.id_livro);
+			gotoxy(53,7);printf("Digite o id do Livro ou [0] SAIR:\n");
+			gotoxy(86,7);scanf("%d", &Reg.id_livro);
 			
 		}
 	}
@@ -544,7 +550,7 @@ void CadastroLivro(void){
 }
 void CadastroAutor(void){
 	TpAutor Aut;
-	FILE *Autor = fopen("Autor.dat","ab+");
+	FILE *Autor = fopen("Autor.dat","rb+");
 	if(Autor == NULL){
 		textcolor(4);
 		gotoxy(22,30);printf("Erro ao abrir Arquivo!!!");
@@ -557,8 +563,8 @@ void CadastroAutor(void){
 	else{
 		limparArea(51, 5, 60,10 );
 		textcolor(15);
-		gotoxy(56,7);printf("Digite o id do Autor: ");
-		gotoxy(77,7);scanf("%d", &Aut.id_autor);
+		gotoxy(56,7);printf("Digite o id do Autor ou [0] SAIR:");
+		gotoxy(89,7);scanf("%d", &Aut.id_autor);
 		while(Aut.id_autor !=0){
 			
 			if(BuscaIDAutor(Autor,Aut.id_autor) == -1) {
@@ -572,10 +578,9 @@ void CadastroAutor(void){
 				textcolor(10);
 				gotoxy(22,28);printf("Autor Cadastrado!!!");
 				fwrite(&Aut , sizeof(TpAutor),1,Autor);
+				InsDiretaAutor(Autor); 
 				Sleep(1800);
 				limparLinha(21,28 , 50);
-				
-
 			}
 			else{
 				textcolor(4);
@@ -585,8 +590,8 @@ void CadastroAutor(void){
 			
 			limparArea(51, 5, 60,10 );
 			textcolor(15);
-			gotoxy(56,7);printf("Digite o id do Autor: ");
-			gotoxy(77,7);scanf("%d", &Aut.id_autor);
+			gotoxy(56,7);printf("Digite o id do Autor ou [0] SAIR:");
+			gotoxy(89,7);scanf("%d", &Aut.id_autor);
 			limparLinha(21,28 , 50);	
 		}
 	}
@@ -596,7 +601,7 @@ void CadastroAutor(void){
 }
 void CadastroPessoa(void){
 	TpPessoa Pess;
-	FILE *Pessoa = fopen("pessoas.dat","ab+");
+	FILE *Pessoa = fopen("pessoas.dat","rb+");
 	if(Pessoa == NULL ){
 		textcolor(4);
 		gotoxy(22,30);printf("Erro ao abrir Arquivo!!!");
@@ -623,6 +628,7 @@ void CadastroPessoa(void){
 				gotoxy(22,28);printf("Pessoa cadastrada !!!");
 				Sleep(3000);
 				fwrite(&Pess, sizeof(TpPessoa),1,Pessoa);
+				InsDiretaPessoa(Pessoa);
 				limparLinha(21,28 , 50);
 			}
 			else{
@@ -660,14 +666,14 @@ void CadastrarEndereco(TpEndereco *Endere){
 	fflush(stdin);
 	gotoxy(63,14);gets(Endere->cidade);
 	gotoxy(56,15);printf("Cep:");
-	gotoxy(61,15);scanf("%d", &Endere->cep);
+	gotoxy(62,15);scanf("%d", &Endere->cep);
 	
 	gotoxy(56,16);printf("Estado:");
 	fflush(stdin);
 	gotoxy(63,16);gets(Endere->estado);
 	gotoxy(56,17);printf("PaÃ­s:");
 	fflush(stdin);
-	gotoxy(62,17);gets(Endere->pais);
+	gotoxy(64,17);gets(Endere->pais);
 	gotoxy(53,18);printf("--------------------------------------------------------");
 	Sleep(1.7);
 }
@@ -675,7 +681,7 @@ void CadastroEmprestimo(void){
 	TpEmprestimo Emp;
 	FILE *Empres,*Livro ,*Pessoa ;
 	
-	Empres = fopen("Emprestimos.dat","ab+");
+	Empres = fopen("Emprestimos.dat","rb+");
 	Livro = fopen("Livro.dat","rb");
 	Pessoa = fopen("Pessoas.dat","rb");
 
@@ -699,9 +705,10 @@ void CadastroEmprestimo(void){
 					gotoxy(56,9);printf("ID da pessoa:");
 					gotoxy(68,9);scanf("%d", &Emp.id_pessoa);
 					if(BuscaIDPessoa(Pessoa, Emp.id_pessoa) != -1){
-						fwrite(&Emp , sizeof(TpEmprestimo),1,Empres);
-						textcolor(10);
 						Emp.status = 1; 
+						fwrite(&Emp , sizeof(TpEmprestimo),1,Empres);
+						InsDiretaEmprestimo(Empres);
+						textcolor(10);
 						gotoxy(22,28);printf("Emprestimo cadastrado!!!");
 						Sleep(1500);
 						fflush(stdin);
@@ -710,14 +717,14 @@ void CadastroEmprestimo(void){
 					}
 					else{
 						textcolor(4);
-						gotoxy(22,28);printf("Pessoa nÃ£o encontrada");
+						gotoxy(22,28);printf("Pessoa não encontrada");
 						Sleep(1.5);
 						
 			
 					}
 				}else{
 					textcolor(4);
-					gotoxy(22,28);printf("Livro nÃ£o encontrado ou jÃ¡ esta emprestado !!!");
+					gotoxy(22,28);printf("Livro não encontrado ou já está emprestado !!!");
 					Sleep(1.5);
 				
 				}
@@ -786,41 +793,42 @@ void CadastroLivroAutor(void){
 		
 		    while(LA.id_livro != 0){
 			    if(BuscaIDLivro(Livro, LA.id_livro) != -1){
-			            gotoxy(56,8); 
-			            printf("ID do Autor:");
-			            gotoxy(56,8); 
-			            scanf("%d", &LA.id_autor);
-			            if(BuscaIDAutor(Autor, LA.id_autor) != -1){
-			                // Escreve a associaÃ§Ã£o no arquivo LivroAutor
-			                fwrite(&LA, sizeof(TpLivroAutor), 1, LivAut);
-			                textcolor(10);
-			                gotoxy(22,28); 
-			                printf("AssociaÃ§Ã£o Livro-Autor cadastrada!!!");
-			                LA.status = 1;
-			                Sleep(1500);
-			                limparLinha(24,28 , 50);
-			            } else {
-			                textcolor(4);
-			                gotoxy(28,28); 
-			                printf("Autor nÃ£o encontrado");
-			                Sleep(1.5);
-			                limparLinha(24,28 , 50);
-			            }
+					gotoxy(56,8); 
+					printf("ID do Autor:");
+					gotoxy(56,8); 
+					scanf("%d", &LA.id_autor);
+					if(BuscaIDAutor(Autor, LA.id_autor) != -1){
+						LA.status = 1;
+						fwrite(&LA, sizeof(TpLivroAutor), 1, LivAut);
+						InsDiretaLivroAutor(LivAut);
+						textcolor(10);
+						gotoxy(22,28); 
+						printf("Associação Livro-Autor cadastrada!!!");
+						
+						Sleep(1500);
+						limparLinha(24,28 , 50);
+					} else {
+						textcolor(4);
+						gotoxy(28,28); 
+						printf("Autor nÃ£o encontrado");
+						Sleep(1.5);
+						limparLinha(24,28 , 50);
+					}
 			    } 
 				else {
-			            textcolor(4);
-			            gotoxy(28,28); 
-			            printf("Livro nÃ£o encontrado !!!");
-			            Sleep(1.5);
-			            limparLinha(24,28 , 50);
-			    }
+					textcolor(4);
+					gotoxy(28,28); 
+					printf("Livro nÃ£o encontrado !!!");
+					Sleep(1.5);
+					limparLinha(24,28 , 50);
+				}
 			
-			        limparArea(51, 5, 60, 10);
-			        textcolor(15);
-			        gotoxy(56,7); 
-			        printf("Digite o id do Livro: ");
-			        gotoxy(77,7); 
-			        scanf("%d", &LA.id_livro);
+				limparArea(51, 5, 60, 10);
+				textcolor(15);
+				gotoxy(56,7); 
+				printf("Digite o id do Livro: ");
+				gotoxy(77,7); 
+				scanf("%d", &LA.id_livro);
 		    }
     
     
@@ -944,7 +952,8 @@ void ExibirLivros(void) {
     }
     fclose(Livro);
     Sleep(1.7);
-    limparArea(51, 5, 60, 12);
+	limparArea(51, 5, 58, 20);
+   // limparArea(51, 5, 60, 12);
 }
 void ExibirAutores(void){
     TpAutor Aut;
@@ -981,7 +990,7 @@ void ExibirAutores(void){
 	        while (!feof(Autor)) {
 	            if (Aut.status == 1) { // Se o autor estÃ¡ ativo
 		            gotoxy(52, linha);
-		            printf("------------------------------------------");
+		            printf("---------------------------------------------------");
 	                gotoxy(52, linha+1);
 	                printf("ID: %d", Aut.id_autor);
 	                gotoxy(52, linha + 2);
@@ -989,10 +998,10 @@ void ExibirAutores(void){
 	                gotoxy(52, linha + 3);
 	                printf("Nacionalidade: %s", Aut.nacionalidade);
 	                gotoxy(52, linha + 4 );
-	            	printf("------------------------------------------");
+	            	printf("---------------------------------------------------");
 	            	linha +=5;
 	            	Sleep(3000);
-	            	if(linha == 21){
+	            	if(linha == 26){
 	            		linha = 6;
 	            		limparArea(51, 5, 58, 20);
 	            	}
@@ -1000,10 +1009,13 @@ void ExibirAutores(void){
 	        	}
 	        	fread(&Aut, sizeof(TpAutor), 1, Autor);
         	}	
+			gotoxy(52, linha);printf("-----------------------Fim-------------------------");
+			Sleep(1500);
 		}
 	}
 	fclose(Autor);
 	textcolor(15);
+	limparArea(51, 5, 58, 20);
 }
 void ExibirPessoas(void) {
     TpPessoa Pess;
@@ -1048,14 +1060,14 @@ void ExibirPessoas(void) {
     		}
 	        Sleep(5000);
 	        fread(&Pess, sizeof(TpPessoa), 1, Pessoa); 
-	        limparArea(53, 5, 58, 20);
+	        limparArea(51, 5, 61, 20);
 	    }
 	        
 	        
     }
     fclose(Pessoa);
     Sleep(1.7);
-    limparArea(51, 5, 60, 12);
+    limparArea(51, 5, 60, 20);
 }
 void ExibirEmprestimos(void) {
     TpEmprestimo Emp;
@@ -1076,6 +1088,7 @@ void ExibirEmprestimos(void) {
         if (Livro != NULL) fclose(Livro);
         if (Pessoa != NULL) fclose(Pessoa);
         Sleep(1500);
+		limparLinha(21, 28, 50);
         textcolor(15);
        
     }
@@ -1094,15 +1107,14 @@ void ExibirEmprestimos(void) {
 	    
 	    }else {
 			// Volta para o inÃ­cio do arquivo de emprÃ©stimos
-		    fseek(Empres, 0, SEEK_SET);
-		
+		    fseek(Empres, 0, 0);
 		    limparArea(51, 5, 60, 10);
 		    textcolor(15);
-		    int linha = 6; // Define onde a lista comeÃ§a na tela
+		    int linha = 6; 
 			fread(&Emp, sizeof(TpEmprestimo), 1, Empres);
 		    while (!feof(Empres)) {
 		    	if(Emp.status !=0){
-			    		 // Verifica se o emprÃ©stimo tem um livro vÃ¡lido e uma pessoa vÃ¡lida
+	
 			        if (BuscaIDLivro(Livro, Emp.id_livro) != -1 && BuscaIDPessoa(Pessoa, Emp.id_pessoa) != -1) {
 			            // Busca o nome da pessoa
 			            fseek(Pessoa, (Emp.id_pessoa - 1) * sizeof(TpPessoa), SEEK_SET); // Posiciona no registro da pessoa
@@ -1138,15 +1150,75 @@ void ExibirEmprestimos(void) {
     limparArea(51, 5, 58, 20);
     textcolor(15);
 }
+void ExibirLivroAutor(void) {
+    TpLivroAutor LA;
+    TpLivro Liv;
+    TpAutor Aut;
+    int linha = 6;
+    FILE *LivAut = fopen("LivroAutor.dat", "rb");
+    FILE *Livro = fopen("Livro.dat", "rb");
+    FILE *Autor = fopen("Autor.dat", "rb");
+
+    if (LivAut == NULL || Livro == NULL || Autor == NULL) {
+        textcolor(4);
+        gotoxy(22, 28);
+        printf("Erro ao abrir Arquivo!!!");
+        fclose(LivAut);
+        fclose(Livro);
+        fclose(Autor);
+        Sleep(3000);
+        limparLinha(21, 28, 50);
+        textcolor(15);
+    } else {
+        fread(&LA, sizeof(TpLivroAutor), 1, LivAut);
+        while (!feof(LivAut)) {
+            if (LA.status != 0) {
+                fseek(Livro, (LA.id_livro - 1) * sizeof(TpLivro), 0);
+                fread(&Liv, sizeof(TpLivro), 1, Livro);
+                
+                fseek(Autor, (LA.id_autor - 1) * sizeof(TpAutor), 0);
+                fread(&Aut, sizeof(TpAutor), 1, Autor);
+
+                gotoxy(52, linha);
+                printf("ID Livro: %d", Liv.id_livro);
+                gotoxy(52, linha + 1);
+                printf("Titulo Livro: %s", Liv.titulo);
+                gotoxy(52, linha + 2);
+                printf("Ano: %d", Liv.ano_publicacao);
+                gotoxy(52, linha + 3);
+                printf("ID Autor: %d", Aut.id_autor);
+                gotoxy(52, linha + 4);
+                printf("Nome Autor: %s", Aut.nome);
+                gotoxy(52, linha + 5);
+                printf("-----------------------------------");
+                Sleep(2000);
+                linha += 6;
+            }
+            if (linha == 26) {
+                linha = 6;
+                limparArea(51, 5, 61, 20);
+            }
+            fread(&LA, sizeof(TpLivroAutor), 1, LivAut);
+        }
+		gotoxy(52,linha);printf("-----------------------FIM----------------------------");
+    }
+
+    fclose(LivAut);
+    fclose(Livro);
+    fclose(Autor);
+    Sleep(1.7);
+    limparArea(51, 5, 61, 20);
+}
 
 void ConsultarLivro(void){
 	TpLivro Liv;
-	FILE *Livro = fopen("Livro.dat","rb");
+	FILE *Livro = fopen("Livro.dat","rb+");
 	if(Livro == NULL){
 		textcolor(4);
 		gotoxy(22,28);printf("Erro ao abrir arquivo!!!");
 		fclose(Livro);
 		Sleep(2000);
+		limparLinha(21, 28, 50);
 	}else{
 		fseek(Livro,0,2);
 		if(ftell(Livro) == 0){
@@ -1155,31 +1227,34 @@ void ConsultarLivro(void){
 			printf("NÃoo tem nenhum livro cadastrado!!!");
 			fclose(Livro);
 			Sleep(2000);
+			limparLinha(21, 28, 50);
 		}
 		else {
 
-			gotoxy(55,7);printf("Digite o ID do livro");
-			gotoxy(76,7);scanf("%d", &Liv.id_livro);
+			gotoxy(55,7);printf("Digite o ID do livro:");
+			gotoxy(77,7);scanf("%d", &Liv.id_livro);
 			while(Liv.id_livro != 0){
 				int pos = BuscaIDLivro(Livro,Liv.id_livro);
 				if( pos != -1){
+					fseek(Livro, pos, 0);
+					fread(&Liv, sizeof(TpLivro),1, Livro);
 					if(Liv.status == 1){
-						fseek(Livro, pos, 0);
-						fread(&Liv, sizeof(TpLivro),1, Livro);
+						gotoxy(52,7);printf("----------------------Livro encontrado---------------------");
 						gotoxy(55,8);printf("Livro: %s",Liv.titulo);
 						gotoxy(55,9);printf("Ano publicado: %d",Liv.ano_publicacao);
-						//// Fazer a busca completa do livro se ele esta emprestado  e qual Ã© Autor que esta associado com ele 
-					
+						gotoxy(52,10);printf("----------------------------------------------------------");
+						Sleep(2000);
 					}
-
 				}else{
 					textcolor(4);
-					gotoxy(22,28);printf("Livro nÃ£o encontrado!!!");
+					gotoxy(22,28);printf("Livro não encontrado!!!");
 					Sleep(2000);
+					limparLinha(21, 28, 50);
 				}
-				limparArea(51, 5, 60, 10);
-				printf("Digite o ID do livro");
-				scanf("%d", &Liv.id_livro);
+				textcolor(15);
+				limparArea(51, 5, 60, 20);
+				gotoxy(55,7);printf("Digite o ID do livro:");
+				gotoxy(77,7);scanf("%d", &Liv.id_livro);
 			}
 		}
 	}
@@ -1210,17 +1285,19 @@ void ConsultarAutor(){
             textcolor(15);
         }
 		else{
-			printf("Digite o ID do autor:");
-			scanf("%d", &Aut.id_autor);
+			gotoxy(52,7);printf("Digite o id do Livro ou [0] SAIR:");
+			gotoxy(85,7);scanf("%d", &Aut.id_autor);
 			while(Aut.id_autor != 0){
 				int pos = BuscaIDAutor(Autor, Aut.id_autor);
 				if(pos != -1){
 					fseek(Autor,pos,0);
 					fread(&Aut, sizeof(TpAutor),1,Autor);
 					if(Aut.status == 1){
-						printf("--------------------------------------------------------------");
-						printf("Nome: %s",Aut.nome);
-						printf("Nacionalidade: %s",Aut.nacionalidade);
+						gotoxy(52,8);printf("-------------------------------------------------------------");
+						gotoxy(52,9);printf("Nome: %s",Aut.nome);
+						gotoxy(52,10);printf("Nacionalidade: %s",Aut.nacionalidade);
+						gotoxy(52,11);printf("-------------------------------------------------------------");
+						Sleep(2000);
 						//precisa fazer uma busca no livro Auotor e buscar todos os dados desse Autor e printar e sempre verificar se esta com status 1
 					}
 					
@@ -1230,12 +1307,18 @@ void ConsultarAutor(){
 					Sleep(2000);
             		limparLinha(24, 28, 50);
 				}
-				printf("Digite o ID do autor:");
-				scanf("%d", &Aut.id_autor);
+				textcolor(15);
+				limparArea(51, 5, 61, 20);
+				gotoxy(52,7);printf("Digite o id do Livro ou [0] SAIR:");
+				gotoxy(85,7);scanf("%d", &Aut.id_autor);
 			}
 
 		}
 	}
+	fclose(Autor);
+	Sleep(2000);
+	limparArea(51, 5, 60, 20);
+
 }
 /// Fazer os consultar igual os de cima Usar outras busca para o consultar Fazer a busca Binaria para arquivo , mas primeiro Ã© preciso fazer entrando ordenado que ainda nÃ£o foi imprementado no cÃ³digo
  void ConsultarPessoa(){
@@ -1243,7 +1326,7 @@ void ConsultarAutor(){
 	FILE *Pessoa = fopen("Pessoas.dat","rb");
 	if(Pessoa == NULL){
 		textcolor(4);
-		gotoxy(22,28);printf("Erro ao abrir arquivo");
+		gotoxy(22,28); printf("Erro ao abrir arquivo");
 		fclose(Pessoa);
 		Sleep(2000);
 		limparLinha(24, 28, 50);
@@ -1266,7 +1349,7 @@ void ConsultarAutor(){
 					fseek(Pessoa,pos,0);
 					fread(&Pess, sizeof(TpPessoa),1, Pessoa);
 					if(Pess.status == 1){
-						gotoxy(52,8);printf("----------------------Pessoa encontrada--------------------------");
+						gotoxy(52,8);printf("----------------------Pessoa encontrada--------------------");
 						gotoxy(52,9);printf("Nome: %s",Pess.nome);
 						gotoxy(52,9);printf("Telefone: %d",Pess.telefone);
 						gotoxy(52,10);printf("--------------------------Endereço------------------------");
@@ -1279,7 +1362,7 @@ void ConsultarAutor(){
 						gotoxy(52,17);printf("Pais: %s", Pess.Endere.pais);
 						//Fazer uma busca de livros se ele fez algum emprestimo cadastrados no nome dele 
 						gotoxy(22,28);getch();
-						limparArea(53, 5, 58, 20);
+						limparArea(51, 5, 60, 20);
 						
 					}else{
 						textcolor(4);
@@ -1294,7 +1377,8 @@ void ConsultarAutor(){
 					Sleep(2000);
 				}
 				textcolor(15);
-				limparArea(53, 5, 58, 20);
+				limparLinha(24, 28, 50);
+				limparArea(51, 5, 61, 20);
 				gotoxy(52,7);printf("Digite o ID da pessoa:");
 				gotoxy(74,7);scanf("%d", &Pess.id_pessoa);
 
@@ -1302,13 +1386,142 @@ void ConsultarAutor(){
 		}
 	}
 	fclose(Pessoa);
+	limparArea(51 ,5, 61, 20);
+ }
+ void ConsultarEmprestimo(){
+	TpEmprestimo Emp;
+	TpPessoa Pess;
+	TpLivro Liv;
+	FILE *Emprestimo = fopen("Emprestimo.dat","rb");
+	FILE * Livro = fopen("Livro.dat", "rb");
+	FILE * Pessoa = fopen("Pessoas.dat", "rb");
+	if(Emprestimo == NULL || Pessoa == NULL || Livro == NULL){
+		textcolor(4);
+		gotoxy(22,28);printf("Erro ao abrir arquivo!!");
+		fclose(Emprestimo);
+		fclose(Livro);
+		fclose(Pessoa);
+		Sleep(2000);
+		limparLinha(24, 28, 50);
+	}else	{
+		fseek(Emprestimo,0,2);
+		if(ftell(Emprestimo)==0){
+			textcolor(4);
+			gotoxy(22,28);printf("Não há emprestimo cadastrado !!!");
+			fclose(Emprestimo);
+			fclose(Livro);
+			fclose(Pessoa);
+			Sleep(2000);
+			limparLinha(24, 28, 50);
+		}else{
+
+			gotoxy(52,7);printf("Digite o ID do emrpestimo:");
+			gotoxy(79,7);scanf("%d", &Emp.id_emprestimo);
+			while(Emp.id_emprestimo != 0){
+				int pos = BuscaIDEmprestimo(Emprestimo,Emp.id_emprestimo);
+				if(pos != -1){
+					fseek(Emprestimo,pos,0);
+					fread(&Emp ,sizeof(TpEmprestimo),1,Emprestimo);
+					pos = BuscaIDPessoa(Pessoa, Emp.id_pessoa);
+					fseek(Pessoa,pos,0);
+					fread(&Pess, sizeof(TpPessoa),1,Pessoa);
+					pos = BuscaIDLivro(Livro,Emp.id_livro);
+					fseek(Livro,pos,0);
+					fread(&Liv, sizeof(TpLivro),1,Livro);
+
+					if(Emp.status == 1){
+						gotoxy(52,7);printf("------------------Emprestimo Encontrado------------------");
+						gotoxy(52, 8); printf("Nome: %s", Pess.nome);
+						gotoxy(52, 8); printf("Nome: %s", Liv.titulo);
+					}else{
+						textcolor(4);
+						gotoxy(22,28);printf("Emprestimo não encontrado");
+						Sleep(2000);
+					}
+
+				}else{
+					textcolor(4);
+					gotoxy(22,28);printf("Emprestimo não encontrado");
+					Sleep(2000);
+					
+				}
+				limparLinha(24, 28, 50);
+				limparArea(51, 5, 60, 20);
+				gotoxy(52,7);printf("Digite o ID do emrpestimo:");
+				gotoxy(79,7);scanf("%d", &Emp.id_emprestimo);
+				
+			}
+		}
+	}
+	fclose(Emprestimo);
+	fclose(Livro);
+	fclose(Pessoa);
+ }
+void ConsultarLivroAutor(){
+TpLivro Liv;
+TpAutor Aut;
+TpLivroAutor LA;
+	FILE *LivAut = fopen("LivroAutor.dat","rb");
+	FILE *Livro = fopen("Livro.dat","rb");
+	FILE *Autor = fopen("Autor.dat","rb");
+
+	if(Livro == NULL || Autor == NULL || LivAut == NULL){
+		textcolor(4);
+		gotoxy(22,28); printf("Erro ao abrir arquivo");
+		fclose(Livro);
+		fclose(LivAut);
+		fclose(Autor);
+		Sleep(2000);
+		limparLinha(24, 28, 50);
+	} else {
+		fseek(Livro,0,2);
+		if(ftell(Livro)==0){
+			textcolor(4);
+			gotoxy(22,28); printf("Não há livros cadastrados para consular!");
+			Sleep(2000);
+			limparLinha(24, 28, 50);
+		} else {
+			gotoxy(52,7); printf("Digite o ID do Livro:");
+			gotoxy(74,7); scanf("%d", &Liv.id_livro);
+			
+			while(Liv.id_livro !=0){
+				int pos = BuscaIDLivroAutor(LivAut, Liv.id_livro);
+				if(pos != -1){
+					fseek(LivAut,pos,0);
+					fread(&LA, sizeof(TpLivroAutor),1,LivAut);
+					pos = BuscaIDLivro(Livro, Liv.id_livro);
+					fseek(Livro,pos,0);
+					fread(&Liv, sizeof(TpLivro), 1, Livro);
+					pos = BuscaIDAutor(Autor, LA.id_autor);
+					fseek(Autor,pos,0);
+					fread(&LA, sizeof(TpLivroAutor),1,Autor);
+					if(Liv.status == 1){
+						gotoxy(52,8);printf("----------------------Livro encontrado--------------------------");
+						gotoxy(52,9);printf("Título: %s",Liv.titulo);
+                        gotoxy(52, 10); printf("Nome autor: %s", Aut.nome );
+						gotoxy(22,28); getch();
+						limparArea(53, 5, 58, 20);
+					} else {
+						textcolor(4);
+						gotoxy(22,28);printf("Livro não cadastrado!");
+						Sleep(2000);
+					}
+					
+				} else {
+					textcolor(4);
+					gotoxy(22,28);printf("Livro não cadastrado!");
+					Sleep(2000);
+				}
+				textcolor(15);
+				limparArea(53, 5, 58, 20);
+				gotoxy(52,7); printf("Digite o ID do Livro: ");
+				gotoxy(74,7); scanf("%d", &Liv.id_livro);
+			}
+		}
+	}
+	fclose(Livro);
 	limparArea(53, 5, 58, 20);
  }
-// void ConsultarEmprestimo(){
-//  }
-// void ConsultarLivroAutor(){
-
-// }
 // void AlterarLivro(){
 	
 // }
@@ -1373,38 +1586,155 @@ void ConsultarAutor(){
 // //Fazer as outras buscas 
 
 // // Fazer as oderanaÃ§Ãµes
-// void InsDiretaLivro(FILE *Livro) {
-//     TpLivro Liv1, Liv2;
-//     long p;
+void InsDiretaLivro(FILE *Livro) {
+    TpLivro Liv1, Liv2;
+    long p;
 
-//     // Obter a posição do último registro inserido
-//     fseek(Livro, 0, 2);
-//     p = ftell(Livro) - sizeof(TpLivro);
+    // Obter a posição do último registro inserido
+    fseek(Livro, 0, 2);
+    p = ftell(Livro) - sizeof(TpLivro);
 
-//     // Iterar para ordenar os registros
-//     while (p > 0) {
-//         // Ler o registro atual
-//         fseek(Livro, p, 0);
-//         fread(&Liv1, sizeof(TpLivro), 1, Livro);
+    // Iterar para ordenar os registros
+    while (p > 0) {
+        // Ler o registro atual
+        fseek(Livro, p, 0);
+        fread(&Liv1, sizeof(TpLivro), 1, Livro);
 
-//         // Ler o registro anterior
-//         fseek(Livro, p - sizeof(TpLivro), 0);
-//         fread(&Liv2, sizeof(TpLivro), 1, Livro);
-// +
-//         // Comparar os IDs
-//         if (Liv1.id_livro < Liv2.id_livro) {
-//             // Trocar os registros no arquivo
-//             fseek(Livro, p, 0);
-//             fwrite(&Liv2, sizeof(TpLivro), 1, Livro);
+        // Ler o registro anterior
+        fseek(Livro, p - sizeof(TpLivro), 0);
+        fread(&Liv2, sizeof(TpLivro), 1, Livro);
+        // Comparar os IDs
+        if(Liv1.id_livro < Liv2.id_livro){
+            // Trocar os registros no arquivo
+            fseek(Livro, p, 0);
+            fwrite(&Liv2, sizeof(TpLivro), 1, Livro);
 
-//             fseek(Livro, p - sizeof(TpLivro), 0);
-//             fwrite(&Liv1, sizeof(TpLivro), 1, Livro);
+            fseek(Livro, p - sizeof(TpLivro), 0);
+            fwrite(&Liv1, sizeof(TpLivro), 1, Livro);
 
-//             // Atualizar a posição para continuar
-//             p -= sizeof(TpLivro);
-//         }else{
-// 			p -= sizeof(TpLivro);
-// 		} 
+            // Atualizar a posição para continuar
+            p -= sizeof(TpLivro);
+        }
+		else{
+			p -= sizeof(TpLivro);
+		} 
 
-//     }
-// }
+    }
+}
+void InsDiretaAutor(FILE *Autor){
+	TpAutor Aut1, Aut2;
+	if(Autor == NULL){
+		textcolor(4);
+		gotoxy(22,30);printf("Erro ao abrir Arquivo!!!");
+		fclose(Autor);
+		Sleep(1.5);
+		limparLinha(24,28 , 50);
+		textcolor(15);
+	}else{
+		fseek(Autor,0,2);
+		
+		int p = ftell(Autor) - sizeof(TpAutor);
+
+		while(p > 0){
+			fseek(Autor,p,0);
+			fread(&Aut1, sizeof(TpAutor),1, Autor);
+
+			fseek(Autor, p - sizeof(TpAutor), 0 );
+			fread(&Aut2, sizeof(TpAutor),1, Autor);
+
+			if(Aut1.id_autor < Aut2.id_autor) {
+				fseek(Autor, p , 0);
+				fwrite(&Aut2, sizeof(TpAutor),1,Autor);
+
+				fseek(Autor,p - sizeof(TpAutor), 0);
+				fwrite(&Aut1, sizeof(TpAutor),1,Autor);
+
+				p -= sizeof(TpAutor);
+			}else{
+				p -=sizeof(TpAutor);
+			}
+
+		}
+	}
+}
+void InsDiretaPessoa(FILE *Pessoa) {
+    TpPessoa Pess1, Pess2;
+    long p;
+
+    fseek(Pessoa, 0, 2);
+    p = ftell(Pessoa) - sizeof(TpPessoa);
+
+    while (p > 0) {
+        fseek(Pessoa, p, 0);
+        fread(&Pess1, sizeof(TpPessoa), 1, Pessoa);
+
+        fseek(Pessoa, p - sizeof(TpPessoa), 0);
+        fread(&Pess2, sizeof(TpPessoa), 1, Pessoa);
+
+        if (Pess1.id_pessoa < Pess2.id_pessoa) {
+            fseek(Pessoa, p, 0);
+            fwrite(&Pess2, sizeof(TpPessoa), 1, Pessoa);
+
+            fseek(Pessoa, p - sizeof(TpPessoa), 0);
+            fwrite(&Pess1, sizeof(TpPessoa), 1, Pessoa);
+
+            p -= sizeof(TpPessoa);
+        } else {
+            p -= sizeof(TpPessoa);
+        }
+    }
+}
+void InsDiretaEmprestimo(FILE *Empres) {
+    TpEmprestimo Emp1, Emp2;
+    long p;
+
+    fseek(Empres, 0, 2);
+    p = ftell(Empres) - sizeof(TpEmprestimo);
+
+    while (p > 0) {
+        fseek(Empres, p, 0);
+        fread(&Emp1, sizeof(TpEmprestimo), 1, Empres);
+
+        fseek(Empres, p - sizeof(TpEmprestimo), 0);
+        fread(&Emp2, sizeof(TpEmprestimo), 1, Empres);
+
+        if (Emp1.id_emprestimo < Emp2.id_emprestimo) {
+            fseek(Empres, p, 0);
+            fwrite(&Emp2, sizeof(TpEmprestimo), 1, Empres);
+
+            fseek(Empres, p - sizeof(TpEmprestimo), 0);
+            fwrite(&Emp1, sizeof(TpEmprestimo), 1, Empres);
+
+            p -= sizeof(TpEmprestimo);
+        } else {
+            p -= sizeof(TpEmprestimo);
+        }
+    }
+}
+void InsDiretaLivroAutor(FILE *LivAut) {
+    TpLivroAutor LA1, LA2;
+    long p;
+
+    fseek(LivAut, 0, 2);
+    p = ftell(LivAut) - sizeof(TpLivroAutor);
+
+    while (p > 0) {
+        fseek(LivAut, p, 0);
+        fread(&LA1, sizeof(TpLivroAutor), 1, LivAut);
+
+        fseek(LivAut, p - sizeof(TpLivroAutor), 0);
+        fread(&LA2, sizeof(TpLivroAutor), 1, LivAut);
+
+        if (LA1.id_livro < LA2.id_livro) {
+            fseek(LivAut, p, 0);
+            fwrite(&LA2, sizeof(TpLivroAutor), 1, LivAut);
+
+            fseek(LivAut, p - sizeof(TpLivroAutor), 0);
+            fwrite(&LA1, sizeof(TpLivroAutor), 1, LivAut);
+
+            p -= sizeof(TpLivroAutor);
+        } else {
+            p -= sizeof(TpLivroAutor);
+        }
+    }
+}
