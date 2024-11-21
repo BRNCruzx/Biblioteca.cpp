@@ -1796,7 +1796,7 @@ void AlterarEmprestimo(){
 void ExclusaoLogicaAutor(){
 	TpAutor Aut;
 	FILE *Autor =fopen("Autor.dat","rb+");
-	if(Autor = NULL){
+	if(Autor == NULL){
 		textcolor(4);
 		gotoxy(22,28);printf("Erro ao abrir arquivo!!!");
 		fclose(Autor);
@@ -1815,7 +1815,7 @@ void ExclusaoLogicaAutor(){
 				textcolor(15);
 				gotoxy(52,10);printf("ID: %d", Aut.id_autor);
 				gotoxy(52,11);printf("NOME: %s",Aut.nome);
-				gotoxy(52,12);printf("NACIONALIDADE: %S", Aut.nacionalidade);
+				gotoxy(52,12);printf("NACIONALIDADE: %s", Aut.nacionalidade);
 				gotoxy(52,13);printf("-----------------------------------------------------------");
 				gotoxy(52,14);printf("Deseja excluir [S]/[N]?");
 				gotoxy(76,14);
@@ -2179,8 +2179,8 @@ void ExclusaoFisicaPessoa(void) {
             gotoxy(52, 9); printf("ID: %d | Nome: %s", Pess.id_pessoa, Pess.nome);
             gotoxy(52, 10); printf("Deseja Excluir? [S] ou [N]");
             if (toupper(getche()) == 'S') {
-                FILE *temp = fopen("Temp.dat", "wb");
-				if(temp == NULL);{
+                FILE *Temp = fopen("Temp.dat", "wb");
+				if(Temp == NULL){
 					textcolor(4);
                     gotoxy(22, 28); printf("Erro ao criar arquivo temporário!");
                     Sleep(2000);
@@ -2189,11 +2189,11 @@ void ExclusaoFisicaPessoa(void) {
                 fread(&Pess, sizeof(TpPessoa), 1, ExcluiPessoa);
                 while (!feof(ExcluiPessoa)) {
                     if (Pess.id_pessoa != pos ) 
-                        fwrite(&Pess, sizeof(TpPessoa), 1, temp);
+                        fwrite(&Pess, sizeof(TpPessoa), 1, Temp);
                     fread(&Pess, sizeof(TpPessoa), 1, ExcluiPessoa);
                 }
                 fclose(ExcluiPessoa);
-                fclose(temp);
+                fclose(Temp);
                 remove("Pessoas.dat");
                 rename("Temp.dat", "Pessoas.dat");
                 printf("Pessoa excluída\n");
@@ -2593,79 +2593,79 @@ void InsDiretaLivroAutor(FILE *LivAut) {
     }
 }
 
-/// Relatorio 
-void relatorioEmprestimoPessoa(void){
-	int pos, localizou;
-	TpPessoa Pess;
-	TpEmprestimo Emp;
-	TpLivro Liv;
+// / Relatorio 
+// void relatorioEmprestimoPessoa(void){
+// 	int pos, localizou;
+// 	TpPessoa Pess;
+// 	TpEmprestimo Emp;
+// 	TpLivro Liv;
 
-	FILE * pessoa = fopen("Pessoas.dat", "rb");
-	FILE * emprestimo = fopen("Emprestimo.dat", "rb");
-	FILE * livro = fopen("Livro.dat", "rb");
+// 	FILE * pessoa = fopen("Pessoas.dat", "rb");
+// 	FILE * emprestimo = fopen("Emprestimo.dat", "rb");
+// 	FILE * livro = fopen("Livro.dat", "rb");
 
-	printf("RELATÓRIO EMPRÉSTIMOS");
-	fseek(pessoa, 0, 2);
-	if (ftell(pessoa)/sizeof(TpPessoa) == 0){
-		textcolor(4);
- 			printf("Não há cadastrados!");
-			Sleep(2000);
-			limparLinha(24, 28, 50);
-	} else {
-		printf("ID da pessoa: ");
-		scanf("%d", &Pess.id_pessoa);
-		while(Pess.id_pessoa != 0){
-			int i;
-			pos = BuscaIDPessoa(pessoa, Pess.id_pessoa);
+// 	printf("RELATÓRIO EMPRÉSTIMOS");
+// 	fseek(pessoa, 0, 2);
+// 	if (ftell(pessoa)/sizeof(TpPessoa) == 0){
+// 		textcolor(4);
+//  			printf("Não há cadastrados!");
+// 			Sleep(2000);
+// 			limparLinha(24, 28, 50);
+// 	} else {
+// 		printf("ID da pessoa: ");
+// 		scanf("%d", &Pess.id_pessoa);
+// 		while(Pess.id_pessoa != 0){
+// 			int i;
+// 			pos = BuscaIDPessoa(pessoa, Pess.id_pessoa);
 
-			if(pos == -1){
-				textcolor(4);
- 				printf("Pessoa nao cadastrada");
-				Sleep(2000);
-				limparLinha(24, 28, 50);
-			} else {
-				fseek(pessoa, pos, 0);
-				fread(&Pess, sizeof(TpPessoa), 1, pessoa);
-				gotoxy(52,8); printf("Dados do Emprestimo");
-				gotoxy(52, linha+5);
-		        printf("ID: %d", Pess.id_pessoa);
-		        gotoxy(52, linha+6);
-		        printf("Nome: %s", Pess.nome);
+// 			if(pos == -1){
+// 				textcolor(4);
+//  				printf("Pessoa nao cadastrada");
+// 				Sleep(2000);
+// 				limparLinha(24, 28, 50);
+// 			} else {
+// 				fseek(pessoa, pos, 0);
+// 				fread(&Pess, sizeof(TpPessoa), 1, pessoa);
+// 				gotoxy(52,8); printf("Dados do Emprestimo");
+// 				gotoxy(52, linha+5);
+// 		        printf("ID: %d", Pess.id_pessoa);
+// 		        gotoxy(52, linha+6);
+// 		        printf("Nome: %s", Pess.nome);
 
-				localiza = 0;
-				fseek(emprestimo, 0, 0);
+// 				localiza = 0;
+// 				fseek(emprestimo, 0, 0);
 
-				while(fread(&Emp, sizeof(TpEmprestimo), 1, emprestimo)){
-					if(Emp.id_pessoa == Pess.id_pessoa){
-						localiza = 1;
-						fseek(livro, 0, 0)
-						while(fread(&Liv, sizeof(TpLivro), 1, livro)){
-							if(Liv.id_pessoa == Pess.id_pessoa){
-								gotoxy(52, i);
-								gotoxy(52,8); printf("Dados do Emprestimo");
-								gotoxy(52, linha+5);
-								printf("ID Emprestimo: %d", Emp.id_emprestimo);
-								gotoxy(52, linha+6);
-								printf("Livro: %s", Liv.titulo);
-								i++;
-							}
-						}
-					}
-					if(localiza != 1){
-						textcolor(4);
-						gotoxy(22, 28);
-						printf("Nenhum emprestimo registrado!");
-						Sleep(1500);
-					}
-				}
-			}
-			getch();
-			limparLinha();
-			printf("ID da pessoa: ");
-			scanf("%d", &Pess.id_pessoa);
-		}
-		fclose(pessoa);
-		fclose(emprestimo);
-		fclose(livro);
-	}
-}
+// 				while(fread(&Emp, sizeof(TpEmprestimo), 1, emprestimo)){
+// 					if(Emp.id_pessoa == Pess.id_pessoa){
+// 						localiza = 1;
+// 						fseek(livro, 0, 0)
+// 						while(fread(&Liv, sizeof(TpLivro), 1, livro)){
+// 							if(Liv.id_pessoa == Pess.id_pessoa){
+// 								gotoxy(52, i);
+// 								gotoxy(52,8); printf("Dados do Emprestimo");
+// 								gotoxy(52, linha+5);
+// 								printf("ID Emprestimo: %d", Emp.id_emprestimo);
+// 								gotoxy(52, linha+6);
+// 								printf("Livro: %s", Liv.titulo);
+// 								i++;
+// 							}
+// 						}
+// 					}
+// 					if(localiza != 1){
+// 						textcolor(4);
+// 						gotoxy(22, 28);
+// 						printf("Nenhum emprestimo registrado!");
+// 						Sleep(1500);
+// 					}
+// 				}
+// 			}
+// 			getch();
+// 			limparLinha();
+// 			printf("ID da pessoa: ");
+// 			scanf("%d", &Pess.id_pessoa);
+// 		}
+// 		fclose(pessoa);
+// 		fclose(emprestimo);
+// 		fclose(livro);
+// 	}
+// }
