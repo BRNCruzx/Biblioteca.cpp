@@ -77,6 +77,14 @@ int BuscaIDEmprestimo(FILE *Empres, int id);
 int BuscaIDLivroEmpres(FILE *Empres, int id );
 
 
+//Busca Binaria
+int BuscaBinariaLivro(FILE *Livro, int id);
+int BuscaBinariaAutor(FILE *Autor, int id);
+int BuscaBinariaPessoa(FILE *Pessoa, int id);
+int BuscaBinariaEmprestimo(FILE *Empres, int id);
+int BuscaBinariaLivroAutor(FILE *LivAut, int id);
+
+
 //Odenação direta 
 void InsDiretaLivro(FILE *Livro);
 void InsDiretaAutor(FILE *Autor);
@@ -117,11 +125,11 @@ void ExclusaoLogicaLivroAutor(void);
 
 
 //Exclusao Fisica
-// void ExclusaoFisicaLivro(void);
-// void ExclusaoFisicaAutor(void);
-// void ExclusaoFisicaPessoa(void);
-// void ExclusaoFisicaEmprestimo(void);
-// void ExclusaoFisicaLivroAutor(void);
+void ExclusaoFisicaLivro(void);
+void ExclusaoFisicaAutor(void);
+void ExclusaoFisicaPessoa(void);
+void ExclusaoFisicaEmprestimo(void);
+void ExclusaoFisicaLivroAutor(void);
 
 
 //Executar 
@@ -1729,52 +1737,707 @@ void AlterarEmprestimo(){
 	fclose(alteraEmprestimo);;
 }
 
-// void ExclusaologicaLivro(){
-// 	TpLivro
-// }
-// void ExclusaoLogicaAutor(){
+ void ExclusaologicaLivro(void){
+ 	TpLivro Liv;
+	FILE *Livro = fopen("Livro.dat","rb+");
 
-// }
-// void ExclusaoLogicaPessoa(){
+	if(Livro == NULL){
+		textcolor(4);
+		gotoxy(22,28);printf("Erro ao abrir arquivo!!!");
+		fclose(Livro);
+		Sleep(2000);
+		limparLinha(21, 28, 50);
+	}else {
+		gotoxy(52,7);printf("Digite O iD que deseja excluir:");
+		gotoxy(94,7);scanf("%d", &Liv.id_livro);
+		while(Liv.id_livro !=0){
+			int pos = BuscaBinariaLivro(Livro, Liv.id_livro);
+			if(pos != -1){
+				fseek(Livro,pos *sizeof(TpLivro), 0);
+				fread(&Liv , sizeof(TpLivro),1,Livro);
+				textcolor(10);
+				gotoxy(52,8);printf("--------------------Livro encontrado-------------------------");
+				textcolor(15);
+				gotoxy(52,10);printf("ID: %d", Liv.id_livro);
+				gotoxy(52,11);printf("TITULO: %s",Liv.titulo);
+				gotoxy(52,12);printf("ANO DA PUBLICACAO: %d", Liv.ano_publicacao);
+				gotoxy(52,13);printf("-----------------------------------------------------------");
+				gotoxy(52,14);printf("Deseja excluir [S]/[N]?");
+				gotoxy(76,14);
+				if(toupper(getch()) == 'S'){
+					Liv.status = 0;
+					textcolor(10);
+					gotoxy(22,28);printf("Livro excluido");
+					Sleep(2000);
+					limparLinha(21, 28, 50);
+					limparArea(51, 5, 61, 20);
+				}else{
+					textcolor(4);
+					gotoxy(22,28);printf("Operacao finalizada!!!");
+					Sleep(2000);
+					limparLinha(21, 28, 50);
+				}
 
-// }
-// void ExclusaoLogicaemprestimo(){
+			}else{
+				textcolor(4);
+				gotoxy(22,28);printf("Livro não encontrado!!!");
+				Sleep(2000);
+				limparLinha(21, 28, 50);
+			}
+			textcolor(15);
+			limparArea(51, 5, 61, 20);
+			gotoxy(52,7);printf("Digite o ID que deseja excluir (0 para sair):");
+			gotoxy(94,7);scanf("%d", &Liv.id_livro);
 
-// }
-// void ExclusaoLogicaLivroAutor(){
+		}
+	}
 
-// }
-// void ExclusaoFisicaLivro(){
+}
+void ExclusaoLogicaAutor(){
+	TpAutor Aut;
+	FILE *Autor =fopen("Autor.dat","rb+");
+	if(Autor = NULL){
+		textcolor(4);
+		gotoxy(22,28);printf("Erro ao abrir arquivo!!!");
+		fclose(Autor);
+		Sleep(2000);
+		limparLinha(21, 28, 50);
+	}else{
+		gotoxy(52,7);printf("Digite o ID que deseja excluir (0 para sair):");
+		gotoxy(94,7);scanf("%d", &Aut.id_autor);
+		while(Aut.id_autor !=0){
+			int pos = BuscaBinariaAutor(Autor , Aut.id_autor);
+			if(pos != -1){
+				fseek(Autor,pos*sizeof(TpAutor), 0);
+				fread(&Aut, sizeof(TpAutor),1,Autor);
+				textcolor(10);
+				gotoxy(52,8);printf("--------------------Autor encontrado-------------------------");
+				textcolor(15);
+				gotoxy(52,10);printf("ID: %d", Aut.id_autor);
+				gotoxy(52,11);printf("NOME: %s",Aut.nome);
+				gotoxy(52,12);printf("NACIONALIDADE: %S", Aut.nacionalidade);
+				gotoxy(52,13);printf("-----------------------------------------------------------");
+				gotoxy(52,14);printf("Deseja excluir [S]/[N]?");
+				gotoxy(76,14);
+				if(toupper(getch()) == 'S'){
+					Aut.status = 0;
+					textcolor(10);
+					gotoxy(22,28);printf("Autor excluido");
+					Sleep(2000);
+					limparLinha(21, 28, 50);
+					limparArea(51, 5, 61, 20);
+				}else{
+					textcolor(4);
+					gotoxy(22,28);printf("Operacao finalizada!!!");
+					Sleep(2000);
+					limparLinha(21, 28, 50);
+				}
+			}else{
+				textcolor(4);
+				gotoxy(22,28);printf("Autor não encontrado!!!");
+				Sleep(2000);
+				limparLinha(21, 28, 50);
+			}
+			textcolor(15);
+			limparArea(51, 5, 61, 20);
+			gotoxy(52,7);printf("Digite o ID que deseja excluir (0 para sair):");
+			gotoxy(94,7);scanf("%d", &Aut.id_autor);
+			
+		}
+		fclose(Autor);
 
-// }
-// void ExclusaoFisicaAuotor(){
+	}
+	fclose(Autor);
+	limparArea(51, 5, 61, 20);
+	
+}
+void ExclusaoLogicaPessoa() {
+    TpPessoa Pess;
+    FILE *Pessoa = fopen("Pessoas.dat", "rb+");
+    
+    if (Pessoa == NULL) {
+        textcolor(4);
+        gotoxy(22, 28); printf("Erro ao abrir arquivo!!!");
+        fclose(Pessoa);
+        Sleep(2000);
+        limparLinha(21, 28, 50);
+    } else {
+        gotoxy(52, 7); printf("Digite o ID que deseja excluir (0 para sair):");
+        gotoxy(84, 7); scanf("%d", &Pess.id_pessoa);
 
-// }
-// void exclusaoFisicaPessoa(){
+        while (Pess.id_pessoa != 0) {
+            int pos = BuscaBinariaPessoa(Pessoa, Pess.id_pessoa);
+            if (pos != -1) {
+                fseek(Pessoa, pos * sizeof(TpPessoa), SEEK_SET);
+                fread(&Pess, sizeof(TpPessoa), 1, Pessoa);
+                
+                textcolor(10);
+                gotoxy(52, 8); printf("--------------------Pessoa encontrada--------------------");
+                textcolor(15);
+                gotoxy(52, 10); printf("ID: %d", Pess.id_pessoa);
+                gotoxy(52, 11); printf("Nome: %s", Pess.nome);
+                gotoxy(52, 12); printf("Telefone: %d", Pess.telefone);
+                gotoxy(52, 13); printf("-------------------------------------------------------");
+                gotoxy(52, 14); printf("Deseja excluir [S]/[N]?");
+                gotoxy(76, 14);
+                
+                if (toupper(getch()) == 'S') {
+                    Pess.status = 0;
+                    fseek(Pessoa, pos * sizeof(TpPessoa), 0);
+                    fwrite(&Pess, sizeof(TpPessoa), 1, Pessoa);
+                    textcolor(10);
+                    gotoxy(22, 28); printf("Pessoa excluída!");
+                    Sleep(2000);
+                    limparLinha(21, 28, 50);
+                } else {
+                    textcolor(4);
+                    gotoxy(22, 28); printf("Operação finalizada!!!");
+                    Sleep(2000);
+                    limparLinha(21, 28, 50);
+                }
+            } else {
+                textcolor(4);
+                gotoxy(22, 28); printf("Pessoa não encontrada!!!");
+                Sleep(2000);
+                limparLinha(21, 28, 50);
+            }
 
-// }
-// void ExclusaoFisicaEmprestimo(){
+            textcolor(15);
+            limparArea(51, 5, 61, 20);
+            gotoxy(52, 7); printf("Digite o ID que deseja excluir (0 para sair):");
+            gotoxy(84, 7); scanf("%d", &Pess.id_pessoa);
+        }
+        fclose(Pessoa);
+    }
+	fclose(Pessoa);
+    limparArea(51, 5, 61, 20);
+}
 
-// }
-// void ExclusaoFisicaLivroAutor(){
+void ExclusaoLogicaEmprestimo() {
+    TpEmprestimo Emp;
+    FILE *Empres = fopen("Emprestimos.dat", "rb+");
 
-// }
-// int BucaBinariaLivro(){
+    if (Empres == NULL) {
+        textcolor(4);
+        gotoxy(22, 28); printf("Erro ao abrir arquivo!!!");
+        fclose(Empres);
+        Sleep(2000);
+        limparLinha(21, 28, 50);
+    } else {
+        gotoxy(52, 7); printf("Digite o ID do empréstimo que deseja excluir (0 para sair):");
+        gotoxy(94, 7); scanf("%d", &Emp.id_emprestimo);
 
-// }
-// int BuscaBinariaAutor(){
+        while (Emp.id_emprestimo != 0) {
+            int pos = BuscaBinariaEmprestimo(Empres, Emp.id_emprestimo);
+            if (pos != -1) {
+                fseek(Empres, pos * sizeof(TpEmprestimo), SEEK_SET);
+                fread(&Emp, sizeof(TpEmprestimo), 1, Empres);
 
-// }
-// int BuscaBinariaPessoa(){
+                textcolor(10);
+                gotoxy(52, 8); printf("------------------Empréstimo encontrado-----------------");
+                textcolor(15);
+                gotoxy(52, 10); printf("ID Empréstimo: %d", Emp.id_emprestimo);
+                gotoxy(52, 11); printf("ID Livro: %d", Emp.id_livro);
+                gotoxy(52, 12); printf("ID Pessoa: %d", Emp.id_pessoa);
+                gotoxy(52, 13); printf("-------------------------------------------------------");
+                gotoxy(52, 14); printf("Deseja excluir [S]/[N]?");
+                gotoxy(76, 14);
 
-// }
-// int BuscaBinariaEmprestimo(){
+                if (toupper(getch()) == 'S') {
+                    Emp.status = 0;
+                    fseek(Empres, pos * sizeof(TpEmprestimo), SEEK_SET);
+                    fwrite(&Emp, sizeof(TpEmprestimo), 1, Empres);
+                    textcolor(10);
+                    gotoxy(22, 28); printf("Empréstimo excluído!");
+                    Sleep(2000);
+                    limparLinha(21, 28, 50);
+                } else {
+                    textcolor(4);
+                    gotoxy(22, 28); printf("Operação finalizada!!!");
+                    Sleep(2000);
+                    limparLinha(21, 28, 50);
+                }
+            } else {
+                textcolor(4);
+                gotoxy(22, 28); printf("Empréstimo não encontrado!!!");
+                Sleep(2000);
+                limparLinha(21, 28, 50);
+            }
 
-// }
-// int BuscaBinariaLivroAutor(){
+            textcolor(15);
+            limparArea(51, 5, 61, 20);
+            gotoxy(52, 7); printf("Digite o ID do empréstimo que deseja excluir (0 para sair):");
+            gotoxy(94, 7); scanf("%d", &Emp.id_emprestimo);
+        }
+        fclose(Empres);
+    }
+    limparArea(51, 5, 61, 20);
+}
 
-// }
-// //Fazer as outras buscas 
+void ExclusaoLogicaLivroAutor() {
+    TpLivroAutor LA;
+    FILE *LivAut = fopen("LivroAutor.dat", "rb+");
+
+    if (LivAut == NULL) {
+        textcolor(4);
+        gotoxy(22, 28); printf("Erro ao abrir arquivo!!!");
+        fclose(LivAut);
+        Sleep(2000);
+        limparLinha(21, 28, 50);
+    } else {
+        gotoxy(52, 7); printf("Digite o ID da associação Livro-Autor que deseja excluir (0 para sair):");
+        gotoxy(102, 7); scanf("%d", &LA.id_livro);
+
+        while (LA.id_livro != 0) {
+            int pos = BuscaBinariaLivroAutor(LivAut, LA.id_livro);
+            if (pos != -1) {
+                fseek(LivAut, pos * sizeof(TpLivroAutor), SEEK_SET);
+                fread(&LA, sizeof(TpLivroAutor), 1, LivAut);
+
+                textcolor(10);
+                gotoxy(52, 8); printf("-----------Associação Livro-Autor encontrada-----------");
+                textcolor(15);
+                gotoxy(52, 10); printf("ID Livro: %d", LA.id_livro);
+                gotoxy(52, 11); printf("ID Autor: %d", LA.id_autor);
+                gotoxy(52, 13); printf("-------------------------------------------------------");
+                gotoxy(52, 14); printf("Deseja excluir [S]/[N]?");
+                gotoxy(76, 14);
+
+                if (toupper(getch()) == 'S') {
+                    LA.status = 0;
+                    fseek(LivAut, pos * sizeof(TpLivroAutor), SEEK_SET);
+                    fwrite(&LA, sizeof(TpLivroAutor), 1, LivAut);
+                    textcolor(10);
+                    gotoxy(22, 28); printf("Associação Livro-Autor excluída!");
+                    Sleep(2000);
+                    limparLinha(21, 28, 50);
+                } else {
+                    textcolor(4);
+                    gotoxy(22, 28); printf("Operação finalizada!!!");
+                    Sleep(2000);
+                    limparLinha(21, 28, 50);
+                }
+            } else {
+                textcolor(4);
+                gotoxy(22, 28); printf("Associação não encontrada!!!");
+                Sleep(2000);
+                limparLinha(21, 28, 50);
+            }
+
+            textcolor(15);
+            limparArea(51, 5, 61, 20);
+            gotoxy(52, 7); printf("Digite o ID da associação Livro-Autor que deseja excluir (0 para sair):");
+            gotoxy(102, 7); scanf("%d", &LA.id_livro);
+        }
+        fclose(LivAut);
+    }
+    limparArea(51, 5, 61, 20);
+}
+
+void ExclusaoFisicaLivro() {
+    TpLivro Livro;
+    FILE *ArquivoLivro = fopen("Livro.dat", "rb");
+
+    if (ArquivoLivro == NULL) {
+        textcolor(4);
+        gotoxy(22, 28); printf("Erro ao abrir o arquivo!!!");
+        fclose(ArquivoLivro);
+        Sleep(2000);
+        limparLinha(21, 28, 50);
+    } else {
+        gotoxy(52, 7); printf("Digite o ID do livro que deseja excluir (0 para sair):");
+        gotoxy(94, 7); scanf("%d", &Livro.id_livro);
+
+        int pos = BuscaIDLivro(ArquivoLivro, Livro.id_livro);
+        if (pos == -1) {
+            textcolor(4);
+            gotoxy(22, 28); printf("Livro não encontrado!!!");
+            Sleep(2000);
+            limparLinha(21, 28, 50);
+        } else {
+            gotoxy(52, 8); printf("-------------------Livro encontrado-------------------");
+            fseek(ArquivoLivro, pos * sizeof(TpLivro), SEEK_SET);
+            fread(&Livro, sizeof(TpLivro), 1, ArquivoLivro);
+            gotoxy(52, 10); printf("ID Livro: %d", Livro.id_livro);
+            gotoxy(52, 11); printf("Título: %s", Livro.titulo);
+            gotoxy(52, 14); printf("Deseja excluir? [S] ou [N]");
+            gotoxy(76, 14);
+
+            if (toupper(getch()) == 'S') {
+                FILE *Temp = fopen("Temp.dat", "wb");
+                if (Temp == NULL) {
+                    textcolor(4);
+                    gotoxy(22, 28); printf("Erro ao criar arquivo temporário!");
+                    Sleep(2000);
+                } else {
+                    rewind(ArquivoLivro);
+                    while (fread(&Livro, sizeof(TpLivro), 1, ArquivoLivro)) {
+                        if (Livro.id_livro != pos)
+                            fwrite(&Livro, sizeof(TpLivro), 1, Temp);
+                    }
+                    fclose(ArquivoLivro);
+                    fclose(Temp);
+                    remove("Livro.dat");
+                    rename("Temp.dat", "Livro.dat");
+                    textcolor(10);
+                    gotoxy(22, 28); printf("Livro excluído com sucesso!");
+                    Sleep(2000);
+                }
+            } else {
+                textcolor(4);
+                gotoxy(22, 28); printf("Operação cancelada!");
+                Sleep(2000);
+            }
+        }
+        limparLinha(21, 28, 50);
+    }
+	fclose(ArquivoLivro);
+}
+
+void ExclusaoFisicaAutor() {
+    TpAutor Autor;
+    FILE *ArquivoAutor = fopen("Autores.dat", "rb");
+
+    if (ArquivoAutor == NULL) {
+        textcolor(4);
+        gotoxy(22, 28); printf("Erro ao abrir o arquivo!!!");
+        fclose(ArquivoAutor);
+        Sleep(2000);
+        limparLinha(21, 28, 50);
+    } else {
+        gotoxy(52, 7); printf("Digite o ID do autor que deseja excluir (0 para sair):");
+        gotoxy(92, 7); scanf("%d", &Autor.id_autor);
+
+        int pos = BuscaIDAutor(ArquivoAutor, Autor.id_autor);
+        if (pos == -1) {
+            textcolor(4);
+            gotoxy(22, 28); printf("Autor não encontrado!!!");
+            Sleep(2000);
+            limparLinha(21, 28, 50);
+        } else {
+            gotoxy(52, 8); printf("-------------------Autor encontrado-------------------");
+            fseek(ArquivoAutor, pos * sizeof(TpAutor), SEEK_SET);
+            fread(&Autor, sizeof(TpAutor), 1, ArquivoAutor);
+            gotoxy(52, 10); printf("ID Autor: %d", Autor.id_autor);
+            gotoxy(52, 11); printf("Nome: %s", Autor.nome);
+            gotoxy(52, 14); printf("Deseja excluir? [S] ou [N]");
+            gotoxy(76, 14);
+
+            if (toupper(getch()) == 'S') {
+                FILE *Temp = fopen("Temp.dat", "wb");
+                if (Temp == NULL) {
+                    textcolor(4);
+                    gotoxy(22, 28); printf("Erro ao criar arquivo temporário!");
+                    Sleep(2000);
+                } else {
+                    rewind(ArquivoAutor);
+                    while (fread(&Autor, sizeof(TpAutor), 1, ArquivoAutor)) {
+                        if (Autor.id_autor != pos)
+                            fwrite(&Autor, sizeof(TpAutor), 1, Temp);
+                    }
+                    fclose(ArquivoAutor);
+                    fclose(Temp);
+                    remove("Autores.dat");
+                    rename("Temp.dat", "Autores.dat");
+                    textcolor(10);
+                    gotoxy(22, 28); printf("Autor excluído com sucesso!");
+                    Sleep(2000);
+                }
+            } else {
+                textcolor(4);
+                gotoxy(22, 28); printf("Operação cancelada!");
+                Sleep(2000);
+            }
+        }
+        limparLinha(21, 28, 50);
+    }
+}
+
+void ExclusaoFisicaPessoa(void) {
+    TpPessoa Pess;
+    FILE *ExcluiPessoa = fopen("Pessoas.dat", "rb");
+
+    if (ExcluiPessoa == NULL) {
+        textcolor(4);
+        gotoxy(22, 28); printf("Erro ao abrir o arquivo\n");
+        fclose(ExcluiPessoa);
+        Sleep(2000);
+        limparLinha(24, 28, 50);
+    } else {
+        gotoxy(52, 7); printf("Digite o ID que deseja excluir (0 para sair):");
+        gotoxy(84, 7); scanf("%d", &Pess.id_pessoa);
+        int pos = BuscaIDPessoa(ExcluiPessoa, Pess.id_pessoa);
+        if (pos == -1) {
+            textcolor(4);
+            gotoxy(22, 28); printf("Pessoa não cadastrada");
+            Sleep(2000);
+            limparLinha(24, 28, 50);
+        } else {
+            gotoxy(52, 8); printf("--------------------Pessoa encontrada-------------------------");
+            fseek(ExcluiPessoa, pos * sizeof(TpPessoa), 0);
+            fread(&Pess, sizeof(TpPessoa), 1, ExcluiPessoa);
+            gotoxy(52, 9); printf("ID: %d | Nome: %s", Pess.id_pessoa, Pess.nome);
+            gotoxy(52, 10); printf("Deseja Excluir? [S] ou [N]");
+            if (toupper(getche()) == 'S') {
+                FILE *temp = fopen("Temp.dat", "wb");
+				if(temp == NULL);{
+					textcolor(4);
+                    gotoxy(22, 28); printf("Erro ao criar arquivo temporário!");
+                    Sleep(2000);
+				}
+                fseek(ExcluiPessoa, 0, 0);
+                fread(&Pess, sizeof(TpPessoa), 1, ExcluiPessoa);
+                while (!feof(ExcluiPessoa)) {
+                    if (Pess.id_pessoa != pos ) 
+                        fwrite(&Pess, sizeof(TpPessoa), 1, temp);
+                    fread(&Pess, sizeof(TpPessoa), 1, ExcluiPessoa);
+                }
+                fclose(ExcluiPessoa);
+                fclose(temp);
+                remove("Pessoas.dat");
+                rename("Temp.dat", "Pessoas.dat");
+                printf("Pessoa excluída\n");
+            } else {
+                fclose(ExcluiPessoa);
+            }
+        }
+        
+    }
+	fclose(ExcluiPessoa);
+}
+
+
+void ExclusaoFisicaEmprestimo() {
+    TpEmprestimo Emprestimo;
+    FILE *ArquivoEmprestimo = fopen("Emprestimos.dat", "rb");
+
+    if (ArquivoEmprestimo == NULL) {
+        textcolor(4);
+        gotoxy(22, 28); printf("Erro ao abrir o arquivo!!!");
+        fclose(ArquivoEmprestimo);
+        Sleep(2000);
+        limparLinha(21, 28, 50);
+    } else {
+        gotoxy(52, 7); printf("Digite o ID do empréstimo que deseja excluir (0 para sair):");
+        gotoxy(94, 7); scanf("%d", &Emprestimo.id_emprestimo);
+
+        int pos = BuscaBinariaEmprestimo(ArquivoEmprestimo, Emprestimo.id_emprestimo);
+        if (pos == -1) {
+            textcolor(4);
+            gotoxy(22, 28); printf("Empréstimo não encontrado!!!");
+            Sleep(2000);
+            limparLinha(21, 28, 50);
+        } else {
+            gotoxy(52, 8); printf("-------------------Empréstimo encontrado-------------------");
+            fseek(ArquivoEmprestimo, pos * sizeof(TpEmprestimo), SEEK_SET);
+            fread(&Emprestimo, sizeof(TpEmprestimo), 1, ArquivoEmprestimo);
+            gotoxy(52, 10); printf("ID Empréstimo: %d", Emprestimo.id_emprestimo);
+            gotoxy(52, 11); printf("ID Livro: %d", Emprestimo.id_livro);
+            gotoxy(52, 12); printf("ID Pessoa: %d", Emprestimo.id_pessoa);
+            gotoxy(52, 14); printf("Deseja excluir? [S] ou [N]");
+            gotoxy(76, 14);
+
+            if (toupper(getch()) == 'S') {
+                FILE *Temp = fopen("Temp.dat", "wb");
+                if (Temp == NULL) {
+                    textcolor(4);
+                    gotoxy(22, 28); printf("Erro ao criar arquivo temporário!");
+                    Sleep(2000);
+                } else {
+                    rewind(ArquivoEmprestimo);
+                    while (fread(&Emprestimo, sizeof(TpEmprestimo), 1, ArquivoEmprestimo)) {
+                        if (Emprestimo.id_emprestimo != pos)
+                            fwrite(&Emprestimo, sizeof(TpEmprestimo), 1, Temp);
+                    }
+                    fclose(ArquivoEmprestimo);
+                    fclose(Temp);
+                    remove("Emprestimos.dat");
+                    rename("Temp.dat", "Emprestimos.dat");
+                    textcolor(10);
+                    gotoxy(22, 28); printf("Empréstimo excluído com sucesso!");
+                    Sleep(2000);
+                }
+            } else {
+                textcolor(4);
+                gotoxy(22, 28); printf("Operação cancelada!");
+                Sleep(2000);
+            }
+        }
+        limparLinha(21, 28, 50);
+    }
+}
+void ExclusaoFisicaLivroAutor() {
+    TpLivroAutor LivroAutor;
+    FILE *ArquivoLivroAutor = fopen("LivroAutor.dat", "rb");
+
+    if (ArquivoLivroAutor == NULL) {
+        textcolor(4);
+        gotoxy(22, 28); printf("Erro ao abrir o arquivo!!!");
+        fclose(ArquivoLivroAutor);
+        Sleep(2000);
+        limparLinha(21, 28, 50);
+    } else {
+        gotoxy(52, 7); printf("Digite o ID do autor do livro que deseja excluir (0 para sair):");
+        gotoxy(94, 7); scanf("%d", &LivroAutor.id_autor);
+
+        int pos = BuscaIDLivroAutor(ArquivoLivroAutor, LivroAutor.id_autor);
+        if (pos == -1) {
+            textcolor(4);
+            gotoxy(22, 28); printf("Autor do livro não encontrado!!!");
+            Sleep(2000);
+            limparLinha(21, 28, 50);
+        } else {
+            gotoxy(52, 8); printf("---------------Autor do Livro encontrado---------------");
+            fseek(ArquivoLivroAutor, pos * sizeof(TpLivroAutor), SEEK_SET);
+            fread(&LivroAutor, sizeof(TpLivroAutor), 1, ArquivoLivroAutor);
+            gotoxy(52, 10); printf("ID Autor: %d", LivroAutor.id_autor);
+            gotoxy(52, 11); printf("ID Livro: %d", LivroAutor.id_livro);
+            gotoxy(52, 14); printf("Deseja excluir? [S] ou [N]");
+            gotoxy(76, 14);
+
+            if (toupper(getch()) == 'S') {
+                FILE *Temp = fopen("Temp.dat", "wb");
+                if (Temp == NULL) {
+                    textcolor(4);
+                    gotoxy(22, 28); printf("Erro ao criar arquivo temporário!");
+                    Sleep(2000);
+                } else {
+                    rewind(ArquivoLivroAutor);
+                    while (fread(&LivroAutor, sizeof(TpLivroAutor), 1, ArquivoLivroAutor)) {
+                        if (LivroAutor.id_autor != pos)
+                            fwrite(&LivroAutor, sizeof(TpLivroAutor), 1, Temp);
+                    }
+                    fclose(ArquivoLivroAutor);
+                    fclose(Temp);
+                    remove("LivroAutor.dat");
+                    rename("Temp.dat", "LivroAutor.dat");
+                    textcolor(10);
+                    gotoxy(22, 28); printf("Autor do livro excluído com sucesso!");
+                    Sleep(2000);
+                }
+            } else {
+                textcolor(4);
+                gotoxy(22, 28); printf("Operação cancelada!");
+                Sleep(2000);
+            }
+        }
+        limparLinha(21, 28, 50);
+    }
+}
+
+
+int BuscaBinariaLivro(FILE *Livro , int id){
+	TpLivro Liv;
+	int inicio , meio, fim;
+	fseek(Livro, 0, 2);
+	fim = ftell(Livro) / sizeof(TpLivro) - 1;
+	inicio = 0;
+	meio = fim / 2 ;
+	fseek(Livro , meio* sizeof(TpLivro) , 0);
+	fread(&Liv, sizeof(TpLivro),1,Livro);
+
+	while(inicio < fim && id != Liv.id_livro){
+		if(Liv.id_livro < id)
+			inicio = meio + 1;
+		else
+			fim = meio;
+
+		meio = (inicio + fim ) / 2;
+		fseek(Livro, meio *sizeof(TpLivro), 0);
+		fread(&Liv, sizeof(TpLivro),1,Livro);
+	}
+	if(id == Liv.id_livro)
+		return  meio ;
+	else
+		return -1 ;
+}
+
+int BuscaBinariaAutor(FILE *Autor, int id) {
+    TpAutor Aut;
+    int inicio, meio, fim;
+
+    fseek(Autor, 0, SEEK_END);
+    fim = ftell(Autor) / sizeof(TpAutor) - 1;
+    inicio = 0;
+    meio = (inicio + fim) / 2;
+    
+    fseek(Autor, meio * sizeof(TpAutor), SEEK_SET);
+    fread(&Aut, sizeof(TpAutor), 1, Autor);
+
+    while (inicio < fim && id != Aut.id_autor) {
+        if (Aut.id_autor < id)
+            inicio = meio + 1;
+        else
+            fim = meio;
+
+        meio = (inicio + fim) / 2;
+        fseek(Autor, meio * sizeof(TpAutor), SEEK_SET);
+        fread(&Aut, sizeof(TpAutor), 1, Autor);
+    }
+
+    if (id == Aut.id_autor)
+        return meio;
+    else
+        return -1;
+}
+
+int BuscaBinariaPessoa(FILE *Pessoa, int id) {
+    TpPessoa Pes;
+    int inicio, meio, fim;
+
+    fseek(Pessoa, 0, SEEK_END);
+    fim = ftell(Pessoa) / sizeof(TpPessoa) - 1;
+    inicio = 0;
+    meio = (inicio + fim) / 2;
+
+    fseek(Pessoa, meio * sizeof(TpPessoa), SEEK_SET);
+    fread(&Pes, sizeof(TpPessoa), 1, Pessoa);
+
+    while (inicio < fim && id != Pes.id_pessoa) {
+        if (Pes.id_pessoa < id)
+            inicio = meio + 1;
+        else
+            fim = meio;
+
+        meio = (inicio + fim) / 2;
+        fseek(Pessoa, meio * sizeof(TpPessoa), SEEK_SET);
+        fread(&Pes, sizeof(TpPessoa), 1, Pessoa);
+    }
+
+    if (id == Pes.id_pessoa)
+        return meio;
+    else
+        return -1;
+}
+
+int BuscaBinariaEmprestimo(FILE *Emprestimos, int id) {
+    TpEmprestimo Emp;
+    int inicio, meio, fim;
+
+    fseek(Emprestimos, 0, SEEK_END);
+    fim = ftell(Emprestimos) / sizeof(TpEmprestimo) - 1;
+    inicio = 0;
+    meio = (inicio + fim) / 2;
+
+    fseek(Emprestimos, meio * sizeof(TpEmprestimo), SEEK_SET);
+    fread(&Emp, sizeof(TpEmprestimo), 1, Emprestimos);
+
+    while (inicio < fim && id != Emp.id_emprestimo) {
+        if (Emp.id_emprestimo < id)
+            inicio = meio + 1;
+        else
+            fim = meio;
+
+        meio = (inicio + fim) / 2;
+        fseek(Emprestimos, meio * sizeof(TpEmprestimo), SEEK_SET);
+        fread(&Emp, sizeof(TpEmprestimo), 1, Emprestimos);
+    }
+
+    if (id == Emp.id_emprestimo)
+        return meio;
+    else
+        return -1;
+}
 
 // // Fazer as oderanaÃ§Ãµes
 void InsDiretaLivro(FILE *Livro) {
@@ -1928,4 +2591,81 @@ void InsDiretaLivroAutor(FILE *LivAut) {
             p -= sizeof(TpLivroAutor);
         }
     }
+}
+
+/// Relatorio 
+void relatorioEmprestimoPessoa(void){
+	int pos, localizou;
+	TpPessoa Pess;
+	TpEmprestimo Emp;
+	TpLivro Liv;
+
+	FILE * pessoa = fopen("Pessoas.dat", "rb");
+	FILE * emprestimo = fopen("Emprestimo.dat", "rb");
+	FILE * livro = fopen("Livro.dat", "rb");
+
+	printf("RELATÓRIO EMPRÉSTIMOS");
+	fseek(pessoa, 0, 2);
+	if (ftell(pessoa)/sizeof(TpPessoa) == 0){
+		textcolor(4);
+ 			printf("Não há cadastrados!");
+			Sleep(2000);
+			limparLinha(24, 28, 50);
+	} else {
+		printf("ID da pessoa: ");
+		scanf("%d", &Pess.id_pessoa);
+		while(Pess.id_pessoa != 0){
+			int i;
+			pos = BuscaIDPessoa(pessoa, Pess.id_pessoa);
+
+			if(pos == -1){
+				textcolor(4);
+ 				printf("Pessoa nao cadastrada");
+				Sleep(2000);
+				limparLinha(24, 28, 50);
+			} else {
+				fseek(pessoa, pos, 0);
+				fread(&Pess, sizeof(TpPessoa), 1, pessoa);
+				gotoxy(52,8); printf("Dados do Emprestimo");
+				gotoxy(52, linha+5);
+		        printf("ID: %d", Pess.id_pessoa);
+		        gotoxy(52, linha+6);
+		        printf("Nome: %s", Pess.nome);
+
+				localiza = 0;
+				fseek(emprestimo, 0, 0);
+
+				while(fread(&Emp, sizeof(TpEmprestimo), 1, emprestimo)){
+					if(Emp.id_pessoa == Pess.id_pessoa){
+						localiza = 1;
+						fseek(livro, 0, 0)
+						while(fread(&Liv, sizeof(TpLivro), 1, livro)){
+							if(Liv.id_pessoa == Pess.id_pessoa){
+								gotoxy(52, i);
+								gotoxy(52,8); printf("Dados do Emprestimo");
+								gotoxy(52, linha+5);
+								printf("ID Emprestimo: %d", Emp.id_emprestimo);
+								gotoxy(52, linha+6);
+								printf("Livro: %s", Liv.titulo);
+								i++;
+							}
+						}
+					}
+					if(localiza != 1){
+						textcolor(4);
+						gotoxy(22, 28);
+						printf("Nenhum emprestimo registrado!");
+						Sleep(1500);
+					}
+				}
+			}
+			getch();
+			limparLinha();
+			printf("ID da pessoa: ");
+			scanf("%d", &Pess.id_pessoa);
+		}
+		fclose(pessoa);
+		fclose(emprestimo);
+		fclose(livro);
+	}
 }
