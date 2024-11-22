@@ -23,7 +23,7 @@ struct TpAutor {
 };
 struct TpEndereco {
 	char rua[TAM],bairro[TAM],cidade[TAM],estado[3],pais[TAM]; 
-	int numero, cep,id_pessoa;
+	int numero, cep;
 };
 struct TpPessoa{
 	int id_pessoa,telefone,status;
@@ -43,7 +43,7 @@ struct TpLivroAutor{
 void PainelPrincipal(void);
 void Moldura(int CI, int LI, int CF, int LF, int CorT, int CorF);
 void Enter(void);
-
+void exibirParabens(int x, int y);
 
 
 
@@ -55,6 +55,7 @@ char MenuPessoa(void);
 char MenuEmprestimo(void);
 char MenuLivroAutor(void);
 int MenuExcluir(void);
+int  MenuRelatorio(void);
 
 
 
@@ -91,6 +92,7 @@ void InsDiretaAutor(FILE *Autor);
 void InsDiretaLivroAutor(FILE *LivAut);
 void InsDiretaEmprestimo(FILE *Empres);
 void InsDiretaPessoa(FILE *Pessoa);
+void OrdenaNacionalidade (FILE * autor);
 
 
 //Exibir 
@@ -139,6 +141,15 @@ void ExecutarLivroAutor(void);
 void ExecutarPessoa(void);
 void ExecutarAutor(void);
 void Executar(void);
+
+//Relatorio
+void relatorioEmprestimoPessoa(void);
+void exibeLivroAutor(void);
+void OrdenaNacionalidade(void);
+void RelatorioLetraAutor (void);
+void GerarRelatorioEmprestimos(void);
+void relatorioCompleto(void);
+
 
 
 void Gotoxy(int x, int y) {
@@ -272,6 +283,17 @@ void PainelPrincipal(void)
     gotoxy(12, 28);
     printf("MENSAGEM:"); // Campo de mensagem no painel.
 }
+void exibirParabens(int x, int y) {
+
+   	textcolor(10);
+    gotoxy(x, y);    printf("PPPPP   AAAAA   RRRRR   AAAAA   BBBBB   EEEEE   N   N   SSSSS");
+    gotoxy(x, y + 1);printf("P   P   A   A   R   R   A   A   B   B   E       NN  N   S");
+    gotoxy(x, y + 2);printf("PPPPP   AAAAA   RRRRR   AAAAA   BBBBB   EEEE    N N N   SSSSS");
+    gotoxy(x, y + 3);printf("P       A   A   R  R    A   A   B   B   E       N  NN       S");
+    gotoxy(x, y + 4);printf("P       A   A   R   R   A   A   BBBBB   EEEEE   N   N   SSSSS");
+	                                 
+    Sleep(5000);
+}
 
 void Executar(void){
 	char op;
@@ -295,6 +317,9 @@ void Executar(void){
 			case'E':
 				ExecutarLivroAutor();
 				break;
+			// case 'F':
+			// 	Executarrelatorio();
+			// 	break;
 		}
 	}while(op != 27);
 }
@@ -316,9 +341,18 @@ void ExecutarLivro(void){
 			case'D':
 				AlterarLivro();
 				break;
-		// 	case'E':
-		// 		ExcluirLivro();
-		// 		break;
+			case'E':
+				op = MenuExcluir();
+				switch(op){
+					case 'A':
+						ExclusaoLogicaLivro();
+						break;
+					case 'B':
+						ExclusaoFisicaLivro();
+						break;
+				
+				}
+				break;
 
 		 }
 	}while(op != 27);
@@ -340,9 +374,17 @@ void ExecutarAutor(void){
 			case'D':
 				AlterarAutor();
 				break;
-			// case'E':
-			// 	ExcluirAutor();
-			// 	break;
+			case'E':
+				op = MenuExcluir();
+				switch(op){
+					case 'A':
+						ExclusaoLogicaAutor();
+						break;
+					case 'B':
+						ExclusaoFisicaAutor();
+						break;
+				}
+				break;
 
 		}
 	}while(op != 27);
@@ -364,9 +406,20 @@ void ExecutarEmprestimo(void){
 			case'D':
 				AlterarEmprestimo();
 				break;
-			// case'E':
-			// 	ExcluirEmprestimo();
-			// 	break;
+			case'E':
+				op =MenuExcluir();
+				switch(op){
+					case 'A':
+						ExclusaoLogicaEmprestimo();
+						break;
+					case 'B':
+						ExclusaoFisicaEmprestimo();
+						break;
+				}
+				break;
+
+					
+				break;
 
 		}
 	}while(op != 27);
@@ -388,9 +441,18 @@ void ExecutarPessoa(void){
 			case'D':
 				AlterarPessoa();
 				break;
-			// case'E':
-			// 	ExcluirPessoa();
-			// 	break;
+			case'E':
+				
+				op = MenuExcluir();
+				switch(op){
+					case 'A':
+						ExclusaoLogicaPessoa();
+						break;
+					case 'B':
+						ExclusaoFisicaPessoa();
+						break;
+				}
+				break;
 		}
 	}while(op != 27);
 }
@@ -409,17 +471,50 @@ void ExecutarLivroAutor(void){
 			case'C':
 				ConsultarLivroAutor();
 				break;			
-			// case'D':
-			//  	AlterarLivroAutor();
-			// 	break;
-			// // case'E':
-			// 	ExcluirLivroAutor();
-			// 	break;
+			case'D':
+				limparArea(13, 13, 35, 10);
+				op =MenuExcluir();
+				switch(op){
+					case 'A':
+						ExclusaoLogicaLivroAutor();
+						break;
+					case 'B':
+						ExclusaoFisicaLivroAutor();
+						break;
+						
+				}
+				break;
 		}
 	}while(op != 27);
 }
 
+void ExecutarRelatorio(void){
+	char op ;
+	op = MenuRelatorio();
+	do {
+		switch(op){
+			case'A':
+			relatorioCompleto();
+			break;
+			case'B':
+			RelatorioLetraAutor();
+			break;
+			case'C':
+
+			break;
+			case'D':
+			break;
+			case'E':
+			break;
+			case'F':
+			break;
+		}
+	}while(op != 27);
+	
+}
+
 //menus
+
 char Menu(void){
 	limparArea(13, 13, 35, 10);
 	textcolor(15);
@@ -427,7 +522,7 @@ char Menu(void){
 	gotoxy(17,12);printf("[B]Autor\n");
 	gotoxy(17,13);printf("[C]Pessoas\n");
 	gotoxy(17,14);printf("[D]Emprestimos\n");
-	gotoxy(17,15);printf("[F]Livro-Autor\n");
+	gotoxy(17,15);printf("[E]Livro-Autor\n");
 	gotoxy(17,16);printf("[ESC]Sair\n");
 	fflush(stdin);
 	gotoxy(21,28);return toupper(getch());
@@ -484,23 +579,34 @@ char MenuEmprestimo(void){
 char MenuLivroAutor(void){
 	limparArea(13, 13, 35, 10);
 	textcolor(15);
-	gotoxy(17,11);printf("[A]Cadastrar Livro-Autor\n");
-	gotoxy(17,12);printf("[B]Exibir Livros-Autores\n");
-	gotoxy(17,13);printf("[C]Consultar Livro-Autor\n");
-	gotoxy(17,14);printf("[D]Alterar Livro-Autor\n");
-	gotoxy(17,15);printf("[E]Excluir Livro-Autor\n");
-	gotoxy(17,16);printf("[ESC]Sair\n");
+	gotoxy(17,11);printf("[A]Cadastrar Livro-Autor");
+	gotoxy(17,12);printf("[B]Exibir Livros-Autores");
+	gotoxy(17,13);printf("[C]Consultar Livro-Autor");
+	gotoxy(17,14);printf("[D]Alterar Livro-Autor");
+	gotoxy(17,15);printf("[E]Excluir Livro-Autor");
+	gotoxy(17,16);printf("[ESC]Sair");
 	fflush(stdin);
 	gotoxy(21,28);return toupper(getch());
 }
 
 int MenuExcluir(void){
-	int op;
-	gotoxy(70,40);printf("[1]- Exclusão Logica\n");
-	gotoxy(70,41);printf("[2]- Exclusão Fi­sica\n");
-	gotoxy(70,42);printf("[3]- Sair");
-	fflush(stdin);
-	gotoxy(21,28);return scanf("%d", &op);
+	limparArea(13, 13, 35, 10);
+	textcolor(15);
+	gotoxy(17,11);printf("[A]- Exclusao Logica\n");
+	gotoxy(17,12);printf("[B]- Exclusao Fisica\n");
+	gotoxy(17,13);printf("[ESC]- Sair             ");
+	gotoxy(21,28);return toupper(getch());
+}
+int  MenuRelatorio(void){
+	limparArea(13, 13, 35, 10);
+	gotoxy(15,11);printf("[A]Consulta de Cada tabela ");
+	gotoxy(15,12);printf("[B]Autor por determinada letra");
+	gotoxy(15,13);printf("[C]Livros - determinada palavra");
+	gotoxy(15,14);printf("[D]Emprestimos de uma pessoa");
+	gotoxy(15,15);printf("[E]Moatrar dados de livro-Autor");
+	gotoxy(15,16);printf("[f]Todos os emprestimos");
+	gotoxy(15,13);printf("[ESC]- Sair ");
+	gotoxy(21,28);return toupper(getch());
 }
 //Cadastros
 void CadastroLivro(void){
@@ -514,24 +620,37 @@ void CadastroLivro(void){
 		fclose(Livro);
 	}
 	else{
-		textcolor(15);
+		textcolor(6);
+		gotoxy(53, 6); printf("--------------------------------------------------------");
+		textcolor(6);
+		gotoxy(53, 8); printf("--------------------------------------------------------");
+		textcolor(3);
 		gotoxy(53,7);printf("Digite o id do Livro ou [0] SAIR:");
+		textcolor(15);
 		gotoxy(86,7);scanf("%d", &Reg.id_livro);
 		while(Reg.id_livro != 0){
 			if(BuscaIDLivro(Livro,Reg.id_livro)== -1){
-				gotoxy(53,8);printf("TITULO:");
+				textcolor(3);
+				gotoxy(53, 9); printf("TITULO:");
 				fflush(stdin);
-				gotoxy(60,8);gets(Reg.titulo);
-				gotoxy(53,9);printf("Ano da publicacao:");
-				gotoxy(72,9);scanf("%d", &Reg.ano_publicacao);
+				textcolor(15);
+				gotoxy(60, 9); gets(Reg.titulo);
+
+				textcolor(3);
+				gotoxy(53, 10); printf("Ano da publicacao:");
+				textcolor(15);
+				gotoxy(71, 10); scanf("%d", &Reg.ano_publicacao);
+
 				Reg.status = 1;
-				fseek(Livro,0,2);
-				fwrite(&Reg , sizeof(TpLivro),1,Livro);
+				fseek(Livro, 0, 2);
+				fwrite(&Reg, sizeof(TpLivro), 1, Livro);
 				InsDiretaLivro(Livro);
+
 				textcolor(10);
-				gotoxy(22,28);printf("Livro Cadastrado!!!");
+				gotoxy(22, 28); printf("Livro Cadastrado!!!");
 				Sleep(1700);
-				limparLinha(21,28 , 50);
+
+				limparLinha(28, 22, 50);
 			
 			}
 			else{	
@@ -542,9 +661,14 @@ void CadastroLivro(void){
 				limparLinha(21,28 , 50);
 			}
 			limparArea(51, 5, 60,10 );
-			textcolor(15);
+			textcolor(6);
+			gotoxy(53, 6); printf("--------------------------------------------------------");
+			gotoxy(53, 8); printf("--------------------------------------------------------");
+			textcolor(3);
 			gotoxy(53,7);printf("Digite o id do Livro ou [0] SAIR:\n");
+			textcolor(15);
 			gotoxy(86,7);scanf("%d", &Reg.id_livro);
+			
 			
 		}
 	}
@@ -692,9 +816,9 @@ void CadastroEmprestimo(void){
 	if(Empres == NULL || Livro == NULL || Pessoa == NULL){
 		textcolor(4);
 		gotoxy(22,28);printf("Erro ao abrir Arquivo!!!");
-		if (Empres != NULL) fclose(Empres);
-        if (Livro != NULL) fclose(Livro);
-        if (Pessoa != NULL) fclose(Pessoa);
+		fclose(Empres);
+        fclose(Livro);
+        fclose(Pessoa);
 		Sleep(1.5);
 		textcolor(15);
 	}
@@ -702,47 +826,49 @@ void CadastroEmprestimo(void){
 		gotoxy(56,7);printf("Digite o id do emprestimo: ");
 		gotoxy(82,7);scanf("%d", &Emp.id_emprestimo);
 		while(Emp.id_emprestimo != 0){
-			if(BuscaIDEmprestimo(Empres,Emp.id_emprestimo) == -1){
+			if(BuscaBinariaEmprestimo(Empres,Emp.id_emprestimo) == -1){
 				gotoxy(56,8);printf("ID do livro:");
-				gotoxy(69,8);scanf("%d", &Emp.id_livro);
-				if(BuscaIDLivro(Livro,Emp.id_livro) != -1 && BuscaIDLivroEmpres(Empres,Emp.id_livro) == - 1){
+				gotoxy(68,8);scanf("%d", &Emp.id_livro);
+				int pos = BuscaBinariaLivro(Livro, Emp.id_livro);
+				int pos1 = BuscaIDLivroEmpres(Empres, Emp.id_livro);
+				if( pos != -1 && pos1 == - 1){
 					gotoxy(56,9);printf("ID da pessoa:");
-					gotoxy(68,9);scanf("%d", &Emp.id_pessoa);
-					if(BuscaIDPessoa(Pessoa, Emp.id_pessoa) != -1){
+					gotoxy(69,9);scanf("%d", &Emp.id_pessoa);
+					if(BuscaBinariaPessoa(Pessoa, Emp.id_pessoa) != -1){
 						Emp.status = 1; 
+						fseek(Empres,0,2);
 						fwrite(&Emp , sizeof(TpEmprestimo),1,Empres);
 						InsDiretaEmprestimo(Empres);
 						textcolor(10);
 						gotoxy(22,28);printf("Emprestimo cadastrado!!!");
-						Sleep(1500);
-						fflush(stdin);
+						Sleep(2000);
 						limparLinha(21,28 , 50);
 						
 					}
 					else{
 						textcolor(4);
 						gotoxy(22,28);printf("Pessoa não encontrada");
-						Sleep(1.5);
+						Sleep(2000);
 						
 			
 					}
 				}else{
 					textcolor(4);
 					gotoxy(22,28);printf("Livro não encontrado ou já está emprestado !!!");
-					Sleep(1.5);
+					Sleep(2000);
 				
 				}
 			}
 			else{
 				textcolor(4);
-				gotoxy(22,28);printf("ID de emprestimo jÃ¡ cadastrado!!!");
-				Sleep(1.5);
+				gotoxy(22,28);printf("ID de emprestimo ja cadastrado!!!");
+				Sleep(2000);
 				
 			}
 			limparArea(51, 5, 60,10 );
 			textcolor(15);
 			gotoxy(56,7);printf("Digite o id do emprestimo: ");
-			gotoxy(86,7);scanf("%d", &Emp.id_emprestimo);
+			gotoxy(82,7);scanf("%d", &Emp.id_emprestimo);
 			limparLinha(21,28 , 50);
 		}
 		fclose(Empres);
@@ -936,6 +1062,7 @@ void ExibirLivros(void) {
         while (!feof(Livro)) {
             // Verifica se o livro nÃ£o foi excluÃ­do (status != 0)
             if (Liv.status != 0) {
+				textcolor(linha / 2);
                 gotoxy(52, linha );
                 printf("ID: %d", Liv.id_livro);
                 gotoxy(52, linha +1);
@@ -943,21 +1070,21 @@ void ExibirLivros(void) {
                 gotoxy(52, linha + 2);
                 printf("Ano: %d", Liv.ano_publicacao);
                 gotoxy(52, linha + 3);
-                printf("-----------------------------------");
+				textcolor(5);
+                printf("------------------------------------------------------------");
                 Sleep(2000); // Ajuste o tempo conforme necessÃ¡rio
                	linha +=4;
             }
              if(linha == 26){
         		linha = 6;
-        		limparArea(51, 5, 58, 20);
+        		limparArea(51, 5, 61, 20);
 	        }
             fread(&Liv, sizeof(TpLivro), 1, Livro); 
         }
     }
     fclose(Livro);
     Sleep(1.7);
-	limparArea(51, 5, 58, 20);
-   // limparArea(51, 5, 60, 12);
+	limparArea(51, 5, 60, 20);
 }
 void ExibirAutores(void){
     TpAutor Aut;
@@ -992,9 +1119,9 @@ void ExibirAutores(void){
 	        int linha = 6; // Define onde a lista comeÃ§a na tela
 			fread(&Aut, sizeof(TpAutor), 1, Autor);
 	        while (!feof(Autor)) {
-	            if (Aut.status == 1) { // Se o autor estÃ¡ ativo
-		            gotoxy(52, linha);
-		            printf("---------------------------------------------------");
+				textcolor(linha / 2);
+	            if (Aut.status == 1) { // Se o autor estÃ¡ ativ
+					textcolor(linha / 2);
 	                gotoxy(52, linha+1);
 	                printf("ID: %d", Aut.id_autor);
 	                gotoxy(52, linha + 2);
@@ -1002,12 +1129,13 @@ void ExibirAutores(void){
 	                gotoxy(52, linha + 3);
 	                printf("Nacionalidade: %s", Aut.nacionalidade);
 	                gotoxy(52, linha + 4 );
+					textcolor(5);
 	            	printf("---------------------------------------------------");
 	            	linha +=5;
 	            	Sleep(3000);
 	            	if(linha == 26){
 	            		linha = 6;
-	            		limparArea(51, 5, 58, 20);
+	            		limparArea(51, 5, 61, 20);
 	            	}
 	            	
 	        	}
@@ -1045,7 +1173,9 @@ void ExibirPessoas(void) {
 		        printf("Nome: %s", Pess.nome);
 		        gotoxy(52, linha+7);
 		        printf("Telefone: %d", Pess.telefone);
-		        gotoxy(52,linha+8);printf("-------------------------EndereÃ§o-----------------------");
+				textcolor(5);
+		        gotoxy(52,linha+8);printf("-------------------------Endereco-----------------------");
+				textcolor(15);
 		        gotoxy(52,linha+9);
 		        printf("Rua: %s", Pess.Endere.rua);
 		        gotoxy(52, linha+10);
@@ -1060,6 +1190,7 @@ void ExibirPessoas(void) {
 		        printf("Estado: %s",Pess.Endere.estado);
 		        gotoxy(52, linha+15);
 		        printf("Pais: %s", Pess.Endere.pais);
+				textcolor(5);
 		       	gotoxy(52,linha+16);printf("--------------------------------------------------------");
     		}
 	        Sleep(5000);
@@ -1077,82 +1208,67 @@ void ExibirEmprestimos(void) {
     TpEmprestimo Emp;
     TpLivro Liv;
     TpPessoa Pess;
-    FILE *Empres, *Livro, *Pessoa;
-
-    // Abrindo os arquivos
-    Empres = fopen("Emprestimos.dat", "rb");
-    Livro = fopen("Livro.dat", "rb");
-    Pessoa = fopen("Pessoas.dat", "rb");
+    FILE *Empres = fopen("Emprestimos.dat", "rb");
+    FILE *Livro = fopen("Livro.dat", "rb");
+   	FILE * Pessoa = fopen("Pessoas.dat", "rb");
 
     if (Empres == NULL || Livro == NULL || Pessoa == NULL) {
         textcolor(4);
         gotoxy(22, 28);
         printf("Erro ao abrir Arquivo!!!");
-        if (Empres != NULL) fclose(Empres);
-        if (Livro != NULL) fclose(Livro);
-        if (Pessoa != NULL) fclose(Pessoa);
-        Sleep(1500);
+		fclose(Empres);
+		fclose(Livro);
+		fclose(Pessoa);
+        Sleep(3000);
 		limparLinha(21, 28, 50);
         textcolor(15);
        
     }
 	else{
-	    	// Verificando se hÃ¡ registros no arquivo de emprÃ©stimos
-	    fseek(Empres, 0, SEEK_END);
-	    if (ftell(Empres) == 0) {
-	        textcolor(4);
-	        gotoxy(22, 28);
-	        printf("Nenhum emprestimo registrado!");
-	        Sleep(1500);
-	        textcolor(15);
-	        fclose(Empres);
-	        fclose(Livro);
-	        fclose(Pessoa);
+		fseek(Empres, 0, 0);
+		int linha = 6; 
+		fread(&Emp, sizeof(TpEmprestimo), 1, Empres);
+		textcolor(15);
+		while (!feof(Empres)) {
+			gotoxy(22,28);printf("ta entrando ");
+			Sleep(2000);
+			if(Emp.status ==1){
+				int pos = BuscaBinariaLivro(Livro, Emp.id_livro);
+				fseek(Livro, pos * sizeof(TpLivro), 0);
+				fread(&Liv, sizeof(TpLivro), 1, Livro);
+				pos = BuscaBinariaPessoa(Pessoa, Emp.id_pessoa);
+				fseek(Pessoa, pos * sizeof(TpPessoa), 0);
+				fread(&Pess, sizeof(TpPessoa),1,Pessoa);
+				if (Pess.status == 1 && Liv.status == 1 ) {
+					gotoxy(56, linha);
+					printf("------------------------------------------");
+					gotoxy(56, linha + 1);
+					printf("ID EMPRESTIMO: %d", Emp.id_emprestimo);
+					gotoxy(56, linha + 2);
+					printf("LIVRO: %s", Liv.titulo);
+					gotoxy(52, linha + 3);printf("ANO PUBLICADO: %d",Liv.ano_publicacao); 
+					gotoxy(56, linha + 4);
+					printf("PESSOA: %s", Pess.nome);
+					gotoxy(52,linha + 5);
+					printf("TELEFONE: %d", Pess.telefone);
+					gotoxy(56, linha+ 6);
+					printf("------------------------------------------");
+					linha += 7; 
+					Sleep(5000);
+				}	
+			}
+			if(linha == 34){
+				linha = 6;
+				limparArea(51, 5, 58, 20);
+			}
+			fread(&Emp, sizeof(TpEmprestimo), 1, Empres); 
+		}
 	    
-	    }else {
-			// Volta para o inÃ­cio do arquivo de emprÃ©stimos
-		    fseek(Empres, 0, 0);
-		    limparArea(51, 5, 60, 10);
-		    textcolor(15);
-		    int linha = 6; 
-			fread(&Emp, sizeof(TpEmprestimo), 1, Empres);
-		    while (!feof(Empres)) {
-		    	if(Emp.status !=0){
-	
-			        if (BuscaIDLivro(Livro, Emp.id_livro) != -1 && BuscaIDPessoa(Pessoa, Emp.id_pessoa) != -1) {
-			            // Busca o nome da pessoa
-			            fseek(Pessoa, (Emp.id_pessoa - 1) * sizeof(TpPessoa), SEEK_SET); // Posiciona no registro da pessoa
-			            fread(&Pess, sizeof(TpPessoa), 1, Pessoa);
-			            fseek(Livro, (Emp.id_livro - 1) * sizeof(TpLivro), SEEK_SET); 
-			            fread(&Liv,sizeof(TpPessoa),1,Livro);
-			            // Exibe as informaÃ§Ãµes do emprÃ©stimo
-			            gotoxy(56, linha);
-			            printf("------------------------------------------");
-			            gotoxy(56, linha + 1);
-			            printf("ID EmprÃ©stimo: %d", Emp.id_emprestimo);
-			            gotoxy(56, linha + 2);
-			            printf("Livro: %s", Liv.titulo);  
-			            gotoxy(56, linha + 3);
-			            printf("Pessoa: %s", Pess.nome);
-			            gotoxy(56, linha+4);
-			            printf("------------------------------------------");
-			            linha += 5; 
-			            Sleep(2000);
-			        }	
-		    	}
-		    	if(linha == 31 ){
-	        		linha = 6;
-	        		limparArea(51, 5, 58, 20);
-		       	 }
-		    	 fread(&Emp, sizeof(TpEmprestimo), 1, Empres); 
-		    }
-	    }
     }
     fclose(Empres);
     fclose(Livro);
     fclose(Pessoa);
     limparArea(51, 5, 58, 20);
-    textcolor(15);
 }
 void ExibirLivroAutor(void) {
     TpLivroAutor LA;
@@ -1216,11 +1332,17 @@ void ExibirLivroAutor(void) {
 
 void ConsultarLivro(void){
 	TpLivro Liv;
-	FILE *Livro = fopen("Livro.dat","rb+");
-	if(Livro == NULL){
+	TpAutor Aut;
+	TpLivroAutor LA;
+	FILE *Livro = fopen("Livro.dat","rb");
+	FILE *LivAut = fopen("LivroAutor.dat","rb");
+	FILE *Autor = fopen("Autor.dat","rb");
+	if(Livro == NULL || Autor == NULL || LivAut == NULL){
 		textcolor(4);
 		gotoxy(22,28);printf("Erro ao abrir arquivo!!!");
 		fclose(Livro);
+		fclose(LivAut);
+		fclose(Autor);
 		Sleep(2000);
 		limparLinha(21, 28, 50);
 	}else{
@@ -1228,25 +1350,49 @@ void ConsultarLivro(void){
 		if(ftell(Livro) == 0){
 			textcolor(4);
 			gotoxy(22,28);
-			printf("NÃoo tem nenhum livro cadastrado!!!");
+			printf("Nao tem nenhum livro cadastrado!!!");
 			fclose(Livro);
+			fclose(LivAut);
+			fclose(Autor);
 			Sleep(2000);
 			limparLinha(21, 28, 50);
 		}
 		else {
-
-			gotoxy(55,7);printf("Digite o ID do livro:");
-			gotoxy(77,7);scanf("%d", &Liv.id_livro);
+			limparArea(51, 5, 61, 20);
+			textcolor(5);
+			gotoxy(52,6);printf("----------------------------------------------------------");
+			gotoxy(52,8);printf("----------------------------------------------------------");
+			textcolor(15);
+			gotoxy(52,7);printf("Digite o ID do livro:");
+			gotoxy(74,7);scanf("%d", &Liv.id_livro);
 			while(Liv.id_livro != 0){
 				int pos = BuscaIDLivro(Livro,Liv.id_livro);
 				if( pos != -1){
 					fseek(Livro, pos, 0);
 					fread(&Liv, sizeof(TpLivro),1, Livro);
 					if(Liv.status == 1){
+						limparArea(51, 5, 61, 20);
+						textcolor(10);
 						gotoxy(52,7);printf("----------------------Livro encontrado---------------------");
+						textcolor(15);
 						gotoxy(55,8);printf("Livro: %s",Liv.titulo);
 						gotoxy(55,9);printf("Ano publicado: %d",Liv.ano_publicacao);
+						textcolor(10);
 						gotoxy(52,10);printf("----------------------------------------------------------");
+						fseek(LivAut,0,0);
+						fread(&LA, sizeof(TpLivroAutor),1,LivAut);
+						while(!feof(LivAut)){
+							if(Liv.id_livro == LA.id_livro){
+								pos = BuscaBinariaAutor(Autor, LA.id_autor);
+								fseek(Autor,pos * sizeof(TpAutor),0);
+								fread(&Aut, sizeof(TpAutor),1,Autor);
+								textcolor(10);
+								gotoxy(52,11);printf("---------AUTOR FOI ENCONTRADO ASSOCIADO AO LIVRO-----------");
+								gotoxy(52,12);printf("NOME: %s",Aut.nome);
+								gotoxy(52,13);printf("Nacionalidade: %s",Aut.nacionalidade);
+							}
+							fread(&LA, sizeof(TpLivroAutor),1,LivAut);
+						}
 						Sleep(2000);
 					}
 				}else{
@@ -1255,14 +1401,19 @@ void ConsultarLivro(void){
 					Sleep(2000);
 					limparLinha(21, 28, 50);
 				}
+				limparArea(51, 5, 61, 20);
+				textcolor(5);
+				gotoxy(52,6);printf("----------------------------------------------------------");
+				gotoxy(52,8);printf("----------------------------------------------------------");
 				textcolor(15);
-				limparArea(51, 5, 60, 20);
 				gotoxy(55,7);printf("Digite o ID do livro:");
 				gotoxy(77,7);scanf("%d", &Liv.id_livro);
 			}
 		}
 	}
 	fclose(Livro);
+	fclose(LivAut);
+	fclose(Autor);
 	limparArea(51, 5, 60, 10);
 
 }
@@ -1289,6 +1440,11 @@ void ConsultarAutor(){
             textcolor(15);
         }
 		else{
+			limparArea(51, 5, 61, 20);
+			textcolor(5);
+			gotoxy(52,6);printf("----------------------------------------------------------");
+			gotoxy(52,8);printf("----------------------------------------------------------");
+			textcolor(15);
 			gotoxy(52,7);printf("Digite o id do Livro ou [0] SAIR:");
 			gotoxy(85,7);scanf("%d", &Aut.id_autor);
 			while(Aut.id_autor != 0){
@@ -1297,10 +1453,13 @@ void ConsultarAutor(){
 					fseek(Autor,pos,0);
 					fread(&Aut, sizeof(TpAutor),1,Autor);
 					if(Aut.status == 1){
-						gotoxy(52,8);printf("-------------------------------------------------------------");
-						gotoxy(52,9);printf("Nome: %s",Aut.nome);
-						gotoxy(52,10);printf("Nacionalidade: %s",Aut.nacionalidade);
-						gotoxy(52,11);printf("-------------------------------------------------------------");
+						textcolor(10);
+						gotoxy(52,9);printf("-------------------------------------------------------------");
+						textcolor(15);
+						gotoxy(52,10);printf("Nome: %s",Aut.nome);
+						gotoxy(52,11);printf("Nacionalidade: %s",Aut.nacionalidade);
+						textcolor(10);
+						gotoxy(52,12);printf("-------------------------------------------------------------");
 						Sleep(2000);
 						//precisa fazer uma busca no livro Auotor e buscar todos os dados desse Autor e printar e sempre verificar se esta com status 1
 					}
@@ -1311,8 +1470,11 @@ void ConsultarAutor(){
 					Sleep(2000);
             		limparLinha(24, 28, 50);
 				}
-				textcolor(15);
 				limparArea(51, 5, 61, 20);
+				textcolor(5);
+				gotoxy(52,6);printf("----------------------------------------------------------");
+				gotoxy(52,8);printf("----------------------------------------------------------");
+				textcolor(15);
 				gotoxy(52,7);printf("Digite o id do Livro ou [0] SAIR:");
 				gotoxy(85,7);scanf("%d", &Aut.id_autor);
 			}
@@ -1344,26 +1506,36 @@ void ConsultarAutor(){
 			limparLinha(24, 28, 50);
 		}
 		else{
+			textcolor(5);
+			gotoxy(52,6);printf("----------------------------------------------------------");
+			gotoxy(52,8);printf("----------------------------------------------------------");
+			textcolor(15);
 			gotoxy(52,7);printf("Digite o ID da pessoa:");
 			gotoxy(74,7);scanf("%d", &Pess.id_pessoa);
-			
 			while(Pess.id_pessoa !=0){
-				int pos = BuscaIDPessoa(Pessoa, Pess.id_pessoa);
+				int pos = BuscaBinariaPessoa(Pessoa, Pess.id_pessoa);
 				if(pos != -1){
-					fseek(Pessoa,pos,0);
+					fseek(Pessoa,pos*sizeof(TpPessoa),0);
 					fread(&Pess, sizeof(TpPessoa),1, Pessoa);
 					if(Pess.status == 1){
-						gotoxy(52,8);printf("----------------------Pessoa encontrada--------------------");
-						gotoxy(52,9);printf("Nome: %s",Pess.nome);
-						gotoxy(52,9);printf("Telefone: %d",Pess.telefone);
-						gotoxy(52,10);printf("--------------------------Endereço------------------------");
-						gotoxy(52,11);printf("Rua: %s", Pess.Endere.rua);
-						gotoxy(52,12);printf("Numero: %d",Pess.Endere.numero);
-						gotoxy(52,13);printf("Bairro: %s", Pess.Endere.bairro);
-						gotoxy(52,14);printf("Cidade: %s", Pess.Endere.cidade);
-						gotoxy(52,15);printf("Cep: %d", Pess.Endere.cep);
-						gotoxy(52,16);printf("Estado: %s", Pess.Endere.estado);
-						gotoxy(52,17);printf("Pais: %s", Pess.Endere.pais);
+						textcolor(5);
+						gotoxy(52,9);printf("----------------------Pessoa encontrada--------------------");
+						textcolor(15);
+						gotoxy(52,10);printf("Nome: %s",Pess.nome);
+						gotoxy(52,11);printf("Telefone: %d",Pess.telefone);
+						textcolor(5);
+						gotoxy(52,12);printf("--------------------------Endereço------------------------");
+						textcolor(15);
+						gotoxy(52,13);printf("Rua: %s", Pess.Endere.rua);
+						gotoxy(52,14);printf("Numero: %d",Pess.Endere.numero);
+						gotoxy(52,15);printf("Bairro: %s", Pess.Endere.bairro);
+						gotoxy(52,16);printf("Cidade: %s", Pess.Endere.cidade);
+						gotoxy(52,17);printf("Cep: %d", Pess.Endere.cep);
+						gotoxy(52,18);printf("Estado: %s", Pess.Endere.estado);
+						gotoxy(52,19);printf("Pais: %s", Pess.Endere.pais);
+						textcolor(5);
+						gotoxy(52,8);printf("----------------------------------------------------------");
+						textcolor(15);
 						//Fazer uma busca de livros se ele fez algum emprestimo cadastrados no nome dele 
 						gotoxy(22,28);getch();
 						limparArea(51, 5, 60, 20);
@@ -1383,9 +1555,11 @@ void ConsultarAutor(){
 				textcolor(15);
 				limparLinha(24, 28, 50);
 				limparArea(51, 5, 61, 20);
+				gotoxy(52,6);printf("----------------------------------------------------------");
+				gotoxy(52,8);printf("----------------------------------------------------------");
+				textcolor(15);
 				gotoxy(52,7);printf("Digite o ID da pessoa:");
 				gotoxy(74,7);scanf("%d", &Pess.id_pessoa);
-
 			}
 		}
 	}
@@ -1406,7 +1580,7 @@ void ConsultarAutor(){
 		fclose(Livro);
 		fclose(Pessoa);
 		Sleep(2000);
-		limparLinha(24, 28, 50);
+		limparLinha(21, 28, 50);
 	}else	{
 		fseek(Emprestimo,0,2);
 		if(ftell(Emprestimo)==0){
@@ -1416,7 +1590,7 @@ void ConsultarAutor(){
 			fclose(Livro);
 			fclose(Pessoa);
 			Sleep(2000);
-			limparLinha(24, 28, 50);
+			limparLinha(21, 28, 50);
 		}else{
 
 			gotoxy(52,7);printf("Digite o ID do emrpestimo:");
@@ -1449,7 +1623,7 @@ void ConsultarAutor(){
 					Sleep(2000);
 					
 				}
-				limparLinha(24, 28, 50);
+				limparLinha(21, 28, 50);
 				limparArea(51, 5, 60, 20);
 				gotoxy(52,7);printf("Digite o ID do emrpestimo:");
 				gotoxy(79,7);scanf("%d", &Emp.id_emprestimo);
@@ -1476,14 +1650,14 @@ void ConsultarLivroAutor(){
 		fclose(LivAut);
 		fclose(Autor);
 		Sleep(2000);
-		limparLinha(24, 28, 50);
+		limparLinha(21, 28, 50);
 	} else {
 		fseek(Livro,0,2);
 		if(ftell(Livro)==0){
 			textcolor(4);
 			gotoxy(22,28); printf("Não há livros cadastrados para consular!");
 			Sleep(2000);
-			limparLinha(24, 28, 50);
+			limparLinha(21, 28, 50);
 		} else {
 			gotoxy(52,7); printf("Digite o ID do Livro:");
 			gotoxy(74,7); scanf("%d", &Liv.id_livro);
@@ -1527,7 +1701,6 @@ void ConsultarLivroAutor(){
 	limparArea(53, 5, 58, 20);
  }
 void AlterarLivro(){
- 	int pos;
 	TpLivro Liv;
  	FILE * alteraLiv = fopen("Livro.dat","rb+");
  	if(alteraLiv==NULL){
@@ -1535,41 +1708,69 @@ void AlterarLivro(){
 		gotoxy(22,28); printf("Erro ao abrir arquivo!");
 		fclose(alteraLiv);
 		Sleep(2000);
-		limparLinha(24, 28, 50);
+		limparLinha(21, 28, 50);
  	} else {
- 		gotoxy(52,7); printf("ID do Livro:");
- 		gotoxy(64,7); scanf("%d", &Liv.id_livro);
+		textcolor(5);
+		gotoxy(52,6);printf("----------------------------------------------------------");
+		gotoxy(52,8);printf("----------------------------------------------------------");
+		textcolor(15);
+		gotoxy(52,7); printf("ID do Livro:");
+		gotoxy(64,7); scanf("%d", &Liv.id_livro);
  		while(Liv.id_livro !=0){
- 			pos=BuscaIDLivro(alteraLiv, Liv.id_livro);
+ 			int pos = BuscaBinariaLivro(alteraLiv, Liv.id_livro);
  			if(pos==-1) {
 				textcolor(4);
  				gotoxy(22,28);printf("Livro nao cadastrado\n");
 				Sleep(2000);
-				limparLinha(24, 28, 50);
- 			} else {
- 				fseek(alteraLiv, pos, 0);
+				limparLinha(21, 28, 50);
+			} else {
+ 				fseek(alteraLiv, pos *sizeof(TpLivro) , 0);
 				fread(&Liv ,sizeof(TpLivro),1, alteraLiv);
-			 	gotoxy(52,8); printf("ID: %d | Titulo: %s\n", Liv.id_livro, Liv.titulo);
-			 	gotoxy(52,9); printf("Deseja alterar?");
-				gotoxy(64,9);
+				textcolor(5);
+				gotoxy(52,9);printf("----------------------------------------------------------");
+				textcolor(15);
+			 	gotoxy(52,10); printf("ID: %d ", Liv.id_livro);
+				gotoxy(52,11); printf("TITULO:%s",Liv.titulo);
+				textcolor(5);
+				gotoxy(52,12);printf("----------------------------------------------------------");
+				textcolor(15);
+				gotoxy(52,13);printf("----------------------------------------------------------");
+			 	gotoxy(52,14); printf("Deseja alterar?:");
+				gotoxy(68,14);
 			 	if(toupper(getche())=='S') {
-					gotoxy(52,11); printf("Novo titulo:");
+					gotoxy(52,15); printf("Novo titulo:");
 					fflush(stdin);
-					Gotoxy(64,10);gets(Liv.titulo);
-					fseek(alteraLiv, pos,0);
+					Gotoxy(63,14);gets(Liv.titulo);
+					fseek(alteraLiv, pos*sizeof(TpLivro),0);
 					fwrite(&Liv, sizeof(TpLivro),1 , alteraLiv);
+					textcolor(10);
 					gotoxy(22,28); printf("Dados alterados!");
-					fseek(alteraLiv, pos,0);
+					fseek(alteraLiv, pos*sizeof(TpLivro),0);
 					fread(&Liv, sizeof(TpLivro), 1, alteraLiv);
-					gotoxy(52,11); printf("ID: %d | Titulo: %s\n", Liv.id_livro, Liv.titulo);
-			 	}
+					textcolor(5);
+					gotoxy(52,16);printf("----------------------------------------------------------");
+					textcolor(15);
+					gotoxy(52,17); printf("ID:%d ", Liv.id_livro);
+					gotoxy(52,18); printf("TITULO:%s",Liv.titulo);
+					textcolor(5);
+					gotoxy(52,19);printf("----------------------------------------------------------");
+					Sleep(2000);
+			 	}else{
+					textcolor(4);
+					gotoxy(22,28);printf("Operacao finalizada!!!");
+					Sleep(2000);
+					limparLinha(21, 28, 50);
+				}
  			}
-			Sleep(2000);
-			limparLinha(24, 28, 50);
+			limparLinha(21, 28, 50);
 			textcolor(15);
 			limparArea(51, 5, 61, 20);
- 			gotoxy(52,7); printf("ID do Livro:\n");
- 			gotoxy(64,7); scanf("%d", &Liv.id_livro);
+ 			textcolor(5);
+			gotoxy(52,6);printf("----------------------------------------------------------");
+			gotoxy(52,8);printf("----------------------------------------------------------");
+			textcolor(15);
+			gotoxy(52,7); printf("ID do Livro:");
+			gotoxy(64,7); scanf("%d", &Liv.id_livro);
  		}
  		fclose(alteraLiv);
  	}
@@ -1588,40 +1789,68 @@ void AlterarAutor(){
 		Sleep(2000);
 		limparLinha(24, 28, 50);
  	} else {
- 		gotoxy(52,7); printf("ID do Autor:\n");
- 		gotoxy(74,7); scanf("%d", &autor.id_autor);
+		textcolor(5);
+		gotoxy(52,6);printf("----------------------------------------------------------");
+		gotoxy(52,8);printf("----------------------------------------------------------");
+		textcolor(15);
+ 		gotoxy(52,7); printf("ID do Autor:");
+ 		gotoxy(64,7); scanf("%d", &autor.id_autor);
  		while(autor.id_autor !=0){
- 			pos=BuscaIDAutor(alteraAutor, autor.id_autor);
+ 			pos=BuscaBinariaAutor(alteraAutor, autor.id_autor);
  			if(pos==-1) {
 				textcolor(4);
  				printf("Autor nao cadastrado\n");
 				Sleep(2000);
 				limparLinha(24, 28, 50);
  			} else {
- 				fseek(alteraAutor, pos, 0);
+ 				fseek(alteraAutor, pos*sizeof(TpAutor), 0);
 				fread(&autor ,sizeof(TpAutor),1, alteraAutor);
-			 	gotoxy(52,8); printf("ID: %d | Nome: %s\n", autor.id_autor, autor.nome);
-			 	gotoxy(52,7); printf("Deseja alterar?");
-				gotoxy(67,7);
+
+			 	textcolor(5);
+				gotoxy(52,9);printf("----------------------------------------------------------");
+				textcolor(15);
+			 	gotoxy(52,10); printf("ID: %d ", autor.id_autor);
+				gotoxy(52,11); printf("TITULO:%s",autor.nome);
+				gotoxy(52,12); printf("NACIONALIDADE:%s",autor.nacionalidade);
+
+				textcolor(5);
+				gotoxy(52,13);printf("----------------------------------------------------------");
+				textcolor(15);
+				gotoxy(52,15);printf("----------------------------------------------------------");
+				textcolor(4);
+			 	gotoxy(52,14); printf("Deseja alterar?");
+				textcolor(15);
+				gotoxy(68,14);
 			 	if(toupper(getche())=='S') {
-					gotoxy(52,8); printf("Novo nome:");
+					gotoxy(52,16); printf("Novo nome:");
 					fflush(stdin);
-					gotoxy(63,8);gets(autor.nome);
-					fseek(alteraAutor, pos,0);
+					gotoxy(63,16);gets(autor.nome);
+					gotoxy(52,17); printf("Nacionalidade:");
+					fflush(stdin);
+					gotoxy(66,17);gets(autor.nacionalidade);
+					fseek(alteraAutor, pos*sizeof(TpAutor),0);
 					fwrite(&autor, sizeof(TpAutor),1 , alteraAutor);
 					textcolor(10);
 					gotoxy(22,28);printf("Dados alterados!");
 					limparLinha(24, 28, 50);
-					fseek(alteraAutor, pos,0);
+					fseek(alteraAutor, pos*sizeof(TpAutor),0);
 					fread(&autor, sizeof(TpAutor), 1, alteraAutor);
-					gotoxy(52,9); printf("ID: %d | Nome: %s\n", autor.id_autor, autor.nome);
+					textcolor(10);
+					gotoxy(52,18);printf("----------------------------------------------------------");
+					textcolor(15);
+					gotoxy(52,19); printf("ID: %d ", autor.id_autor);
+					gotoxy(52,20); printf("TITULO:%s",autor.nome);
+					gotoxy(52,21); printf("NACIONALIDADE: %s",autor.nacionalidade);
+					textcolor(10);
+					gotoxy(52,22);printf("----------------------------------------------------------");
+					
 			 	}
  			}
 			Sleep(2000);
 			textcolor(15);
 			limparArea(51, 5, 61, 20);
  			gotoxy(52,7); printf("ID do Autor:\n");
- 			gotoxy(74,7); scanf("%d", &autor.id_autor);
+ 			gotoxy(64,7); scanf("%d", &autor.id_autor);
  		}
  		fclose(alteraAutor);
  	}
@@ -1632,7 +1861,7 @@ void AlterarAutor(){
 void AlterarPessoa(){
 	int pos;
 	TpPessoa pessoa;
- 	FILE * alteraPessoa = fopen("Pessoa.dat","rb+");
+ 	FILE * alteraPessoa = fopen("Pessoas.dat","rb+");
  	if(alteraPessoa==NULL){
  		textcolor(4);
 		gotoxy(22,28); printf("Erro ao abrir arquivo!");
@@ -1640,39 +1869,67 @@ void AlterarPessoa(){
 		Sleep(2000);
 		limparLinha(24, 28, 50);
  	} else {
- 		gotoxy(52,7); printf("ID da pessoa:\n");
- 		gotoxy(74,7); scanf("%d", &pessoa.id_pessoa);
+		textcolor(5);
+		gotoxy(52,6);printf("----------------------------------------------------------");
+		gotoxy(52,8);printf("----------------------------------------------------------");
+		textcolor(15);
+ 		gotoxy(52,7); printf("ID da pessoa:");
+ 		gotoxy(65,7); scanf("%d", &pessoa.id_pessoa);
  		while(pessoa.id_pessoa !=0){
- 			pos=BuscaIDPessoa(alteraPessoa, pessoa.id_pessoa);
+ 			pos=BuscaBinariaPessoa(alteraPessoa, pessoa.id_pessoa);
  			if(pos==-1) {
 				textcolor(4);
  				printf("Pessoa nao cadastrado\n");
 				Sleep(2000);
 				limparLinha(24, 28, 50);
  			} else {
- 				fseek(alteraPessoa, pos, 0);
+ 				fseek(alteraPessoa, pos*sizeof(TpPessoa), 0);
 				fread(&pessoa ,sizeof(TpPessoa),1, alteraPessoa);
-			 	gotoxy(52,8); printf("ID: %d | Nome: %s | Telefone: %d", pessoa.id_pessoa, pessoa.nome, pessoa.telefone);
-			 	gotoxy(52,7); printf("Deseja alterar?");
+				gotoxy(52,9);printf("----------------------------------------------------------");
+				textcolor(15);
+			 	gotoxy(52,10); printf("ID: %d ", pessoa.id_pessoa);
+				gotoxy(52,11); printf("NOME:%s",pessoa.nome);
+				gotoxy(52,12); printf("TELEFONE: %d",pessoa.telefone);
+
+				textcolor(5);
+				gotoxy(52,13);printf("----------------------------------------------------------");
+				textcolor(15);
+				gotoxy(52,15);printf("----------------------------------------------------------");
+				textcolor(4);
+			 	gotoxy(52,14); printf("Deseja alterar?:");
+				gotoxy(68,14);
 			 	if(toupper(getche())=='S') {
-					gotoxy(52,9); printf("Novo nome:");
+					textcolor(15);
+					gotoxy(52,16); printf("Novo nome:");
 					fflush(stdin);
-					gotoxy(64,9);gets(pessoa.nome);
-					gotoxy(52,10);printf("Novo Telefone:");
-					gotoxy(70,10);scanf("%d", &pessoa.telefone);
-					fseek(alteraPessoa, pos,0);
+					gotoxy(62,16);gets(pessoa.nome);
+					gotoxy(52,17);printf("Novo Telefone:");
+					gotoxy(66,17);scanf("%d", &pessoa.telefone);
+					fseek(alteraPessoa, pos*sizeof(TpPessoa),0);
 					fwrite(&pessoa, sizeof(TpPessoa),1 , alteraPessoa);
 					gotoxy(52,10); printf("Dados alterados!");
-					fseek(alteraPessoa, pos,0);
+					fseek(alteraPessoa, pos*sizeof(TpPessoa),0);
 					fread(&pessoa, sizeof(TpPessoa), 1, alteraPessoa);
-					gotoxy(52,8); printf("ID: %d | Nome: %s | Telefone: %d", pessoa.id_pessoa, pessoa.nome, pessoa.telefone);
+					gotoxy(52,19);printf("----------------------------------------------------------");
+					textcolor(15);
+					gotoxy(52,20); printf("ID: %d ", pessoa.id_pessoa);
+					gotoxy(52,21); printf("NOME:%s",pessoa.nome);
+					gotoxy(52,22); printf("TELEFONE: %d",pessoa.telefone);
+					textcolor(5);
+					gotoxy(52,23);printf("----------------------------------------------------------");
+					textcolor(15);
+						
 			 	}
  			}
 			Sleep(2000);
 			textcolor(15);
 			limparArea(51, 5, 61, 20);
- 			gotoxy(52,7); printf("ID da Pessoa:\n");
- 			gotoxy(74,7); scanf("%d", &pessoa.id_pessoa);
+ 			textcolor(5);
+			gotoxy(52,6);printf("----------------------------------------------------------");
+			gotoxy(52,8);printf("----------------------------------------------------------");
+			textcolor(15);
+			gotoxy(52,7); printf("ID da pessoa:");
+			gotoxy(65,7); scanf("%d", &pessoa.id_pessoa);
  		}
  		fclose(alteraPessoa);
  	}
@@ -1734,10 +1991,9 @@ void AlterarEmprestimo(){
 	fclose(alteraEmprestimo);;
 }
 
- void ExclusaologicaLivro(void){
+ void ExclusaoLogicaLivro(void){
  	TpLivro Liv;
 	FILE *Livro = fopen("Livro.dat","rb+");
-
 	if(Livro == NULL){
 		textcolor(4);
 		gotoxy(22,28);printf("Erro ao abrir arquivo!!!");
@@ -1745,26 +2001,36 @@ void AlterarEmprestimo(){
 		Sleep(2000);
 		limparLinha(21, 28, 50);
 	}else {
-		gotoxy(52,7);printf("Digite O iD que deseja excluir:");
-		gotoxy(94,7);scanf("%d", &Liv.id_livro);
+		limparArea(51, 5, 61, 20);
+		textcolor(5);
+		gotoxy(52,6);printf("----------------------------------------------------------");
+		gotoxy(52,8);printf("----------------------------------------------------------");
+		textcolor(15);
+		gotoxy(52,7);printf("Digite o ID que deseja excluir (0 para sair):");
+		gotoxy(97,7);scanf("%d", &Liv.id_livro);
 		while(Liv.id_livro !=0){
 			int pos = BuscaBinariaLivro(Livro, Liv.id_livro);
 			if(pos != -1){
 				fseek(Livro,pos *sizeof(TpLivro), 0);
 				fread(&Liv , sizeof(TpLivro),1,Livro);
 				textcolor(10);
-				gotoxy(52,8);printf("--------------------Livro encontrado-------------------------");
+				gotoxy(52,9);printf("--------------------Livro encontrado-------------------------");
 				textcolor(15);
 				gotoxy(52,10);printf("ID: %d", Liv.id_livro);
 				gotoxy(52,11);printf("TITULO: %s",Liv.titulo);
 				gotoxy(52,12);printf("ANO DA PUBLICACAO: %d", Liv.ano_publicacao);
+				textcolor(10);
 				gotoxy(52,13);printf("-----------------------------------------------------------");
+				textcolor(4);
 				gotoxy(52,14);printf("Deseja excluir [S]/[N]?");
+				textcolor(15);
 				gotoxy(76,14);
 				if(toupper(getch()) == 'S'){
 					Liv.status = 0;
 					textcolor(10);
 					gotoxy(22,28);printf("Livro excluido");
+					fseek(Livro, pos *sizeof(TpLivro),0);
+					fwrite(&Liv, sizeof(TpLivro),1,Livro);
 					Sleep(2000);
 					limparLinha(21, 28, 50);
 					limparArea(51, 5, 61, 20);
@@ -1781,13 +2047,18 @@ void AlterarEmprestimo(){
 				Sleep(2000);
 				limparLinha(21, 28, 50);
 			}
-			textcolor(15);
 			limparArea(51, 5, 61, 20);
+			textcolor(5);
+			gotoxy(52,6);printf("----------------------------------------------------------");
+			gotoxy(52,8);printf("----------------------------------------------------------");
+			textcolor(15);
 			gotoxy(52,7);printf("Digite o ID que deseja excluir (0 para sair):");
-			gotoxy(94,7);scanf("%d", &Liv.id_livro);
+			gotoxy(97,7);scanf("%d", &Liv.id_livro);
 
 		}
 	}
+	limparArea(51, 5, 61, 20);
+	fclose(Livro);
 
 }
 void ExclusaoLogicaAutor(){
@@ -1800,35 +2071,55 @@ void ExclusaoLogicaAutor(){
 		Sleep(2000);
 		limparLinha(21, 28, 50);
 	}else{
+		limparArea(51, 5, 61, 20);
+		textcolor(5);
+		gotoxy(52,6);printf("----------------------------------------------------------");
+		gotoxy(52,8);printf("----------------------------------------------------------");
+		textcolor(15);
 		gotoxy(52,7);printf("Digite o ID que deseja excluir (0 para sair):");
-		gotoxy(94,7);scanf("%d", &Aut.id_autor);
+		gotoxy(97,7);scanf("%d", &Aut.id_autor);
 		while(Aut.id_autor !=0){
 			int pos = BuscaBinariaAutor(Autor , Aut.id_autor);
 			if(pos != -1){
 				fseek(Autor,pos*sizeof(TpAutor), 0);
 				fread(&Aut, sizeof(TpAutor),1,Autor);
 				textcolor(10);
-				gotoxy(52,8);printf("--------------------Autor encontrado-------------------------");
-				textcolor(15);
-				gotoxy(52,10);printf("ID: %d", Aut.id_autor);
-				gotoxy(52,11);printf("NOME: %s",Aut.nome);
-				gotoxy(52,12);printf("NACIONALIDADE: %s", Aut.nacionalidade);
-				gotoxy(52,13);printf("-----------------------------------------------------------");
-				gotoxy(52,14);printf("Deseja excluir [S]/[N]?");
-				gotoxy(76,14);
-				if(toupper(getch()) == 'S'){
-					Aut.status = 0;
+				if(Aut.status == 1 ){
+					gotoxy(52,9);printf("--------------------Autor encontrado-------------------------");
+					textcolor(15);
+					gotoxy(52,10);printf("ID: %d", Aut.id_autor);
+					gotoxy(52,11);printf("NOME: %s",Aut.nome);
+					gotoxy(52,12);printf("NACIONALIDADE: %s", Aut.nacionalidade);
 					textcolor(10);
-					gotoxy(22,28);printf("Autor excluido");
-					Sleep(2000);
-					limparLinha(21, 28, 50);
-					limparArea(51, 5, 61, 20);
+					gotoxy(52,13);printf("-----------------------------------------------------------");
+					textcolor(4);
+					gotoxy(52,14);printf("Deseja excluir [S]/[N]?");
+					textcolor(15);
+					gotoxy(76,14);
+					if(toupper(getch()) == 'S'){
+						Aut.status = 0;
+						textcolor(10);
+						gotoxy(22,28);printf("Autor excluido");
+						fseek(Autor, pos*sizeof(TpAutor),0);
+						fwrite(&Aut, sizeof(TpAutor),1,Autor);
+						exibirParabens(52,17);
+						limparLinha(21, 28, 50);
+						limparArea(51, 5, 61, 20);
+					}else{
+						textcolor(4);
+						gotoxy(22,28);printf("Operacao finalizada!!!");
+						Sleep(2000);
+						limparLinha(21, 28, 50);
+					}
+
 				}else{
 					textcolor(4);
-					gotoxy(22,28);printf("Operacao finalizada!!!");
+					gotoxy(22,28);printf("Autor não encontrado!!!");
 					Sleep(2000);
 					limparLinha(21, 28, 50);
 				}
+				
+				
 			}else{
 				textcolor(4);
 				gotoxy(22,28);printf("Autor não encontrado!!!");
@@ -1838,7 +2129,7 @@ void ExclusaoLogicaAutor(){
 			textcolor(15);
 			limparArea(51, 5, 61, 20);
 			gotoxy(52,7);printf("Digite o ID que deseja excluir (0 para sair):");
-			gotoxy(94,7);scanf("%d", &Aut.id_autor);
+			gotoxy(97,7);scanf("%d", &Aut.id_autor);
 			
 		}
 		fclose(Autor);
@@ -1859,9 +2150,13 @@ void ExclusaoLogicaPessoa() {
         Sleep(2000);
         limparLinha(21, 28, 50);
     } else {
+		limparArea(51, 5, 61, 20);
+		textcolor(5);
+		gotoxy(52,6);printf("----------------------------------------------------------");
+		gotoxy(52,8);printf("----------------------------------------------------------");
+		textcolor(15);
         gotoxy(52, 7); printf("Digite o ID que deseja excluir (0 para sair):");
-        gotoxy(84, 7); scanf("%d", &Pess.id_pessoa);
-
+        gotoxy(98, 7); scanf("%d", &Pess.id_pessoa);
         while (Pess.id_pessoa != 0) {
             int pos = BuscaBinariaPessoa(Pessoa, Pess.id_pessoa);
             if (pos != -1) {
@@ -1874,7 +2169,9 @@ void ExclusaoLogicaPessoa() {
                 gotoxy(52, 10); printf("ID: %d", Pess.id_pessoa);
                 gotoxy(52, 11); printf("Nome: %s", Pess.nome);
                 gotoxy(52, 12); printf("Telefone: %d", Pess.telefone);
+				textcolor(10);
                 gotoxy(52, 13); printf("-------------------------------------------------------");
+				textcolor(4);
                 gotoxy(52, 14); printf("Deseja excluir [S]/[N]?");
                 gotoxy(76, 14);
                 
@@ -1902,7 +2199,7 @@ void ExclusaoLogicaPessoa() {
             textcolor(15);
             limparArea(51, 5, 61, 20);
             gotoxy(52, 7); printf("Digite o ID que deseja excluir (0 para sair):");
-            gotoxy(84, 7); scanf("%d", &Pess.id_pessoa);
+            gotoxy(98, 7); scanf("%d", &Pess.id_pessoa);
         }
         fclose(Pessoa);
     }
@@ -2023,7 +2320,7 @@ void ExclusaoLogicaLivroAutor() {
             textcolor(15);
             limparArea(51, 5, 61, 20);
             gotoxy(52, 7); printf("Digite o ID da associação Livro-Autor que deseja excluir (0 para sair):");
-            gotoxy(102, 7); scanf("%d", &LA.id_livro);
+            gotoxy(96, 7); scanf("%d", &LA.id_livro);
         }
         fclose(LivAut);
     }
@@ -2032,8 +2329,8 @@ void ExclusaoLogicaLivroAutor() {
 
 void ExclusaoFisicaLivro() {
     TpLivro Livro;
+	int Aux;
     FILE *ArquivoLivro = fopen("Livro.dat", "rb");
-
     if (ArquivoLivro == NULL) {
         textcolor(4);
         gotoxy(22, 28); printf("Erro ao abrir o arquivo!!!");
@@ -2041,41 +2338,54 @@ void ExclusaoFisicaLivro() {
         Sleep(2000);
         limparLinha(21, 28, 50);
     } else {
+		textcolor(5);
+		gotoxy(52,6);printf("----------------------------------------------------------");
+		gotoxy(52,8);printf("----------------------------------------------------------");
+		textcolor(15);
         gotoxy(52, 7); printf("Digite o ID do livro que deseja excluir (0 para sair):");
-        gotoxy(94, 7); scanf("%d", &Livro.id_livro);
+        gotoxy(106, 7); scanf("%d", &Aux);
 
-        int pos = BuscaIDLivro(ArquivoLivro, Livro.id_livro);
+        int pos = BuscaBinariaLivro(ArquivoLivro, Aux);
         if (pos == -1) {
             textcolor(4);
             gotoxy(22, 28); printf("Livro não encontrado!!!");
             Sleep(2000);
             limparLinha(21, 28, 50);
         } else {
-            gotoxy(52, 8); printf("-------------------Livro encontrado-------------------");
-            fseek(ArquivoLivro, pos * sizeof(TpLivro), SEEK_SET);
+			textcolor(10);
+            gotoxy(52, 9); printf("-------------------Livro encontrado----------------------");
+			gotoxy(52,12);printf("----------------------------------------------------------");
+            fseek(ArquivoLivro, pos * sizeof(TpLivro), 0);
             fread(&Livro, sizeof(TpLivro), 1, ArquivoLivro);
+			textcolor(15);
             gotoxy(52, 10); printf("ID Livro: %d", Livro.id_livro);
             gotoxy(52, 11); printf("Título: %s", Livro.titulo);
+			textcolor(4);
             gotoxy(52, 14); printf("Deseja excluir? [S] ou [N]");
-            gotoxy(76, 14);
-
+			textcolor(15);
+            gotoxy(78, 14);
             if (toupper(getch()) == 'S') {
                 FILE *Temp = fopen("Temp.dat", "wb");
                 if (Temp == NULL) {
                     textcolor(4);
                     gotoxy(22, 28); printf("Erro ao criar arquivo temporário!");
+					fclose(Temp);
                     Sleep(2000);
+					limparLinha(21, 28, 50);
                 } else {
-                    rewind(ArquivoLivro);
-                    while (fread(&Livro, sizeof(TpLivro), 1, ArquivoLivro)) {
-                        if (Livro.id_livro != pos)
+                   	fseek(ArquivoLivro, 0, 0);
+ 					fread(&Livro, sizeof(TpLivro), 1, ArquivoLivro);
+                    while (!feof(ArquivoLivro)) {
+                        if (Livro.id_livro != Aux )
                             fwrite(&Livro, sizeof(TpLivro), 1, Temp);
+						fread(&Livro, sizeof(TpLivro),1,ArquivoLivro);
                     }
                     fclose(ArquivoLivro);
                     fclose(Temp);
                     remove("Livro.dat");
                     rename("Temp.dat", "Livro.dat");
                     textcolor(10);
+					exibirParabens(52,17);
                     gotoxy(22, 28); printf("Livro excluído com sucesso!");
                     Sleep(2000);
                 }
@@ -2088,11 +2398,13 @@ void ExclusaoFisicaLivro() {
         limparLinha(21, 28, 50);
     }
 	fclose(ArquivoLivro);
+	limparArea(51, 5, 61, 20);
 }
 
 void ExclusaoFisicaAutor() {
     TpAutor Autor;
-    FILE *ArquivoAutor = fopen("Autores.dat", "rb");
+	int Aux;
+    FILE *ArquivoAutor = fopen("Autor.dat", "rb");
 
     if (ArquivoAutor == NULL) {
         textcolor(4);
@@ -2101,40 +2413,52 @@ void ExclusaoFisicaAutor() {
         Sleep(2000);
         limparLinha(21, 28, 50);
     } else {
+        textcolor(5);
+        gotoxy(52, 6); printf("----------------------------------------------------------");
+        gotoxy(52, 8); printf("----------------------------------------------------------");
+        textcolor(15);
         gotoxy(52, 7); printf("Digite o ID do autor que deseja excluir (0 para sair):");
-        gotoxy(92, 7); scanf("%d", &Autor.id_autor);
-
-        int pos = BuscaIDAutor(ArquivoAutor, Autor.id_autor);
+        gotoxy(106, 7); scanf("%d", &Aux);
+        int pos = BuscaBinariaAutor(ArquivoAutor, Aux);
         if (pos == -1) {
             textcolor(4);
             gotoxy(22, 28); printf("Autor não encontrado!!!");
             Sleep(2000);
             limparLinha(21, 28, 50);
         } else {
-            gotoxy(52, 8); printf("-------------------Autor encontrado-------------------");
-            fseek(ArquivoAutor, pos * sizeof(TpAutor), SEEK_SET);
+            textcolor(10);
+            gotoxy(52, 9); printf("-------------------Autor encontrado-------------------");
+			gotoxy(52,12);printf("----------------------------------------------------------");
+            fseek(ArquivoAutor, pos * sizeof(TpAutor), 0);
             fread(&Autor, sizeof(TpAutor), 1, ArquivoAutor);
+            textcolor(15);
             gotoxy(52, 10); printf("ID Autor: %d", Autor.id_autor);
             gotoxy(52, 11); printf("Nome: %s", Autor.nome);
+            textcolor(4);
             gotoxy(52, 14); printf("Deseja excluir? [S] ou [N]");
-            gotoxy(76, 14);
+            gotoxy(78, 14);
 
             if (toupper(getch()) == 'S') {
                 FILE *Temp = fopen("Temp.dat", "wb");
                 if (Temp == NULL) {
                     textcolor(4);
                     gotoxy(22, 28); printf("Erro ao criar arquivo temporário!");
+                    fclose(Temp);
                     Sleep(2000);
                 } else {
-                    rewind(ArquivoAutor);
-                    while (fread(&Autor, sizeof(TpAutor), 1, ArquivoAutor)) {
-                        if (Autor.id_autor != pos)
+                    fseek(ArquivoAutor, 0, 0);
+                    fread(&Autor, sizeof(TpAutor), 1, ArquivoAutor);
+                    while (!feof(ArquivoAutor)) {
+                        if (Autor.id_autor != Aux) {
                             fwrite(&Autor, sizeof(TpAutor), 1, Temp);
+                        }
+                        fread(&Autor, sizeof(TpAutor), 1, ArquivoAutor);
                     }
                     fclose(ArquivoAutor);
                     fclose(Temp);
-                    remove("Autores.dat");
-                    rename("Temp.dat", "Autores.dat");
+                    remove("Autor.dat");
+                    rename("Temp.dat", "Autor.dat");
+					exibirParabens(52,17);
                     textcolor(10);
                     gotoxy(22, 28); printf("Autor excluído com sucesso!");
                     Sleep(2000);
@@ -2146,61 +2470,105 @@ void ExclusaoFisicaAutor() {
             }
         }
         limparLinha(21, 28, 50);
+		
     }
+	fclose(ArquivoAutor);
+	limparArea(51, 5, 61, 20);
 }
 
-void ExclusaoFisicaPessoa(void) {
+
+void ExclusaoFisicaPessoa() {
     TpPessoa Pess;
+	int Aux;
     FILE *ExcluiPessoa = fopen("Pessoas.dat", "rb");
 
     if (ExcluiPessoa == NULL) {
         textcolor(4);
-        gotoxy(22, 28); printf("Erro ao abrir o arquivo\n");
+        gotoxy(22, 28); printf("Erro ao abrir o arquivo!!!");
         fclose(ExcluiPessoa);
         Sleep(2000);
-        limparLinha(24, 28, 50);
+        limparLinha(21, 28, 50);
     } else {
+		textcolor(5);
+        gotoxy(52, 6); printf("----------------------------------------------------------");
+        gotoxy(52, 8); printf("----------------------------------------------------------");
+        textcolor(15);
         gotoxy(52, 7); printf("Digite o ID que deseja excluir (0 para sair):");
-        gotoxy(84, 7); scanf("%d", &Pess.id_pessoa);
-        int pos = BuscaIDPessoa(ExcluiPessoa, Pess.id_pessoa);
+        gotoxy(97, 7); scanf("%d", &Aux);
+
+        int pos = BuscaBinariaPessoa(ExcluiPessoa, Aux);
         if (pos == -1) {
             textcolor(4);
-            gotoxy(22, 28); printf("Pessoa não cadastrada");
+            gotoxy(22, 28); printf("Pessoa não encontrada!!!");
             Sleep(2000);
-            limparLinha(24, 28, 50);
+            limparLinha(21, 28, 50);
         } else {
-            gotoxy(52, 8); printf("--------------------Pessoa encontrada-------------------------");
             fseek(ExcluiPessoa, pos * sizeof(TpPessoa), 0);
             fread(&Pess, sizeof(TpPessoa), 1, ExcluiPessoa);
-            gotoxy(52, 9); printf("ID: %d | Nome: %s", Pess.id_pessoa, Pess.nome);
-            gotoxy(52, 10); printf("Deseja Excluir? [S] ou [N]");
-            if (toupper(getche()) == 'S') {
-                FILE *Temp = fopen("Temp.dat", "wb");
-				if(Temp == NULL){
-					textcolor(4);
-                    gotoxy(22, 28); printf("Erro ao criar arquivo temporário!");
-                    Sleep(2000);
-				}
-                fseek(ExcluiPessoa, 0, 0);
-                fread(&Pess, sizeof(TpPessoa), 1, ExcluiPessoa);
-                while (!feof(ExcluiPessoa)) {
-                    if (Pess.id_pessoa != pos ) 
-                        fwrite(&Pess, sizeof(TpPessoa), 1, Temp);
-                    fread(&Pess, sizeof(TpPessoa), 1, ExcluiPessoa);
-                }
-                fclose(ExcluiPessoa);
-                fclose(Temp);
-                remove("Pessoas.dat");
-                rename("Temp.dat", "Pessoas.dat");
-                printf("Pessoa excluída\n");
-            } else {
-                fclose(ExcluiPessoa);
-            }
+			if(Pess.status == 1){
+				gotoxy(52,9);printf("----------------------Pessoa encontrada--------------------");
+				textcolor(15);
+				gotoxy(52,10);printf("Nome: %s",Pess.nome);
+				gotoxy(52,11);printf("Telefone: %d",Pess.telefone);
+				textcolor(5);
+				gotoxy(52,12);printf("--------------------------Endereço------------------------");
+				textcolor(15);
+				gotoxy(52,13);printf("Rua: %s", Pess.Endere.rua);
+				gotoxy(52,14);printf("Numero: %d",Pess.Endere.numero);
+				gotoxy(52,15);printf("Bairro: %s", Pess.Endere.bairro);
+				gotoxy(52,16);printf("Cidade: %s", Pess.Endere.cidade);
+				gotoxy(52,17);printf("Cep: %d", Pess.Endere.cep);
+				gotoxy(52,18);printf("Estado: %s", Pess.Endere.estado);
+				gotoxy(52,19);printf("Pais: %s", Pess.Endere.pais);
+				textcolor(5);
+				gotoxy(52,8);printf("----------------------------------------------------------");
+				textcolor(4);
+				gotoxy(52, 20); printf("Deseja excluir? [S] ou [N]");
+				gotoxy(79, 20);
+				
+				if (toupper(getch()) == 'S') {
+					FILE *Temp = fopen("Temp.dat", "wb");
+					if (Temp == NULL) {
+						textcolor(4);
+						gotoxy(22, 28); printf("Erro ao criar arquivo temporário!");
+						fclose(Temp);
+						Sleep(2000);
+					} else {
+						fseek(ExcluiPessoa, 0, SEEK_SET);
+						fread(&Pess, sizeof(TpPessoa), 1, ExcluiPessoa);
+						while (!feof(ExcluiPessoa)) {
+							if (Pess.id_pessoa != Aux) {
+								fwrite(&Pess, sizeof(TpPessoa), 1, Temp);
+							}
+							fread(&Pess, sizeof(TpPessoa), 1, ExcluiPessoa);
+						}
+						fclose(ExcluiPessoa);
+						fclose(Temp);
+						remove("Pessoas.dat");
+						rename("Temp.dat", "Pessoas.dat");
+						textcolor(10);
+						gotoxy(22, 28); printf("Pessoa excluída com sucesso!");
+						Sleep(2000);
+					}
+				}else {
+					textcolor(10);
+					gotoxy(22, 28); printf("Operação cancelada!");
+					Sleep(2000);
+           		 }
+                
+            } else{
+				textcolor(4);
+				gotoxy(22, 28); printf("Pessoa não encontrada!!!");
+				Sleep(2000);
+				limparLinha(21, 28, 50);
+			}
         }
-        
+        limparLinha(21, 28, 50);
     }
 	fclose(ExcluiPessoa);
+	limparArea(51, 5, 61, 20);
 }
+
 
 
 void ExclusaoFisicaEmprestimo() {
@@ -2227,9 +2595,8 @@ void ExclusaoFisicaEmprestimo() {
             gotoxy(52, 8); printf("-------------------Empréstimo encontrado-------------------");
             fseek(ArquivoEmprestimo, pos * sizeof(TpEmprestimo), SEEK_SET);
             fread(&Emprestimo, sizeof(TpEmprestimo), 1, ArquivoEmprestimo);
-            gotoxy(52, 10); printf("ID Empréstimo: %d", Emprestimo.id_emprestimo);
-            gotoxy(52, 11); printf("ID Livro: %d", Emprestimo.id_livro);
-            gotoxy(52, 12); printf("ID Pessoa: %d", Emprestimo.id_pessoa);
+            gotoxy(52, 10); printf("ID Empréstimo: %d | ID Livro: %d | ID Pessoa: %d", 
+                                    Emprestimo.id_emprestimo, Emprestimo.id_livro, Emprestimo.id_pessoa);
             gotoxy(52, 14); printf("Deseja excluir? [S] ou [N]");
             gotoxy(76, 14);
 
@@ -2238,29 +2605,32 @@ void ExclusaoFisicaEmprestimo() {
                 if (Temp == NULL) {
                     textcolor(4);
                     gotoxy(22, 28); printf("Erro ao criar arquivo temporário!");
+                    fclose(Temp);
                     Sleep(2000);
                 } else {
-                    rewind(ArquivoEmprestimo);
-                    while (fread(&Emprestimo, sizeof(TpEmprestimo), 1, ArquivoEmprestimo)) {
-                        if (Emprestimo.id_emprestimo != pos)
+                    fseek(ArquivoEmprestimo, 0, SEEK_SET);
+                    fread(&Emprestimo, sizeof(TpEmprestimo), 1, ArquivoEmprestimo);
+                    while (!feof(ArquivoEmprestimo)) {
+                        if (Emprestimo.id_emprestimo != pos) {
                             fwrite(&Emprestimo, sizeof(TpEmprestimo), 1, Temp);
+                        }
+                        fread(&Emprestimo, sizeof(TpEmprestimo), 1, ArquivoEmprestimo);
                     }
                     fclose(ArquivoEmprestimo);
                     fclose(Temp);
                     remove("Emprestimos.dat");
                     rename("Temp.dat", "Emprestimos.dat");
-                    textcolor(10);
                     gotoxy(22, 28); printf("Empréstimo excluído com sucesso!");
                     Sleep(2000);
                 }
             } else {
-                textcolor(4);
                 gotoxy(22, 28); printf("Operação cancelada!");
                 Sleep(2000);
             }
         }
         limparLinha(21, 28, 50);
     }
+	limparArea(51, 5, 61, 20);
 }
 void ExclusaoFisicaLivroAutor() {
     TpLivroAutor LivroAutor;
@@ -2286,8 +2656,7 @@ void ExclusaoFisicaLivroAutor() {
             gotoxy(52, 8); printf("---------------Autor do Livro encontrado---------------");
             fseek(ArquivoLivroAutor, pos * sizeof(TpLivroAutor), SEEK_SET);
             fread(&LivroAutor, sizeof(TpLivroAutor), 1, ArquivoLivroAutor);
-            gotoxy(52, 10); printf("ID Autor: %d", LivroAutor.id_autor);
-            gotoxy(52, 11); printf("ID Livro: %d", LivroAutor.id_livro);
+            gotoxy(52, 10); printf("ID Autor: %d | ID Livro: %d", LivroAutor.id_autor, LivroAutor.id_livro);
             gotoxy(52, 14); printf("Deseja excluir? [S] ou [N]");
             gotoxy(76, 14);
 
@@ -2296,29 +2665,32 @@ void ExclusaoFisicaLivroAutor() {
                 if (Temp == NULL) {
                     textcolor(4);
                     gotoxy(22, 28); printf("Erro ao criar arquivo temporário!");
+                    fclose(Temp);
                     Sleep(2000);
                 } else {
-                    rewind(ArquivoLivroAutor);
-                    while (fread(&LivroAutor, sizeof(TpLivroAutor), 1, ArquivoLivroAutor)) {
-                        if (LivroAutor.id_autor != pos)
+                    fseek(ArquivoLivroAutor, 0, SEEK_SET);
+                    fread(&LivroAutor, sizeof(TpLivroAutor), 1, ArquivoLivroAutor);
+                    while (!feof(ArquivoLivroAutor)) {
+                        if (LivroAutor.id_autor != pos) {
                             fwrite(&LivroAutor, sizeof(TpLivroAutor), 1, Temp);
+                        }
+                        fread(&LivroAutor, sizeof(TpLivroAutor), 1, ArquivoLivroAutor);
                     }
                     fclose(ArquivoLivroAutor);
                     fclose(Temp);
                     remove("LivroAutor.dat");
                     rename("Temp.dat", "LivroAutor.dat");
-                    textcolor(10);
                     gotoxy(22, 28); printf("Autor do livro excluído com sucesso!");
                     Sleep(2000);
                 }
             } else {
-                textcolor(4);
                 gotoxy(22, 28); printf("Operação cancelada!");
                 Sleep(2000);
             }
         }
         limparLinha(21, 28, 50);
     }
+	limparArea(51, 5, 61, 20);
 }
 
 
@@ -2589,278 +2961,392 @@ void InsDiretaLivroAutor(FILE *LivAut) {
     }
 }
 
-// / Relatorio 
-// void relatorioEmprestimoPessoa(void){
-// 	int pos, localizou;
-// 	TpPessoa Pess;
-// 	TpEmprestimo Emp;
-// 	TpLivro Liv;
+ // Relatorio 
+ void relatorioEmprestimoPessoa(void) {
+    int pos, localizou, linha;
+    TpPessoa Pess;
+    TpEmprestimo Emp;
+    TpLivro Liv;
 
-// 	FILE * pessoa = fopen("Pessoas.dat", "rb");
-// 	FILE * emprestimo = fopen("Emprestimo.dat", "rb");
-// 	FILE * livro = fopen("Livro.dat", "rb");
+    FILE *pessoa = fopen("Pessoas.dat", "rb");
+    FILE *emprestimo = fopen("Emprestimo.dat", "rb");
+    FILE *livro = fopen("Livro.dat", "rb");
 
-// 	printf("RELATÓRIO EMPRÉSTIMOS");
-// 	fseek(pessoa, 0, 2);
-// 	if (ftell(pessoa)/sizeof(TpPessoa) == 0){
-// 		textcolor(4);
-//  			printf("Não há cadastrados!");
-// 			Sleep(2000);
-// 			limparLinha(24, 28, 50);
-// 	} else {
-// 		printf("ID da pessoa: ");
-// 		scanf("%d", &Pess.id_pessoa);
-// 		while(Pess.id_pessoa != 0){
-// 			int i;
-// 			pos = BuscaIDPessoa(pessoa, Pess.id_pessoa);
+    fseek(pessoa, 0, 2);
+    if (ftell(pessoa) / sizeof(TpPessoa) == 0) {
+        textcolor(4);
+        printf("Não há cadastrados!");
+        Sleep(2000);
+        limparLinha(24, 28, 50);
+    } else {
+        gotoxy(52, 7);
+        printf("ID da pessoa: ");
+        gotoxy(63, 7);
+        scanf("%d", &Pess.id_pessoa);
 
-// 			if(pos == -1){
-// 				textcolor(4);
-//  				printf("Pessoa nao cadastrada");
-// 				Sleep(2000);
-// 				limparLinha(24, 28, 50);
-// 			} else {
-// 				fseek(pessoa, pos, 0);
-// 				fread(&Pess, sizeof(TpPessoa), 1, pessoa);
-// 				gotoxy(52,8); printf("Dados do Emprestimo");
-// 				gotoxy(52, linha+5);
-// 		        printf("ID: %d", Pess.id_pessoa);
-// 		        gotoxy(52, linha+6);
-// 		        printf("Nome: %s", Pess.nome);
+        while (Pess.id_pessoa != 0) {
+            pos = BuscaBinariaPessoa(pessoa, Pess.id_pessoa);
 
-// 				localiza = 0;
-// 				fseek(emprestimo, 0, 0);
+            if (pos == -1) {
+                textcolor(4);
+                printf("Pessoa nao cadastrada");
+                Sleep(2000);
+                limparLinha(24, 28, 50);
+            } else {
+                fseek(pessoa, pos * sizeof(TpPessoa), SEEK_SET);
+                fread(&Pess, sizeof(TpPessoa), 1, pessoa);
 
-// 				while(fread(&Emp, sizeof(TpEmprestimo), 1, emprestimo)){
-// 					if(Emp.id_pessoa == Pess.id_pessoa){
-// 						localiza = 1;
-// 						fseek(livro, 0, 0)
-// 						while(fread(&Liv, sizeof(TpLivro), 1, livro)){
-// 							if(Liv.id_pessoa == Pess.id_pessoa){
-// 								gotoxy(52, i);
-// 								gotoxy(52,8); printf("Dados do Emprestimo");
-// 								gotoxy(52, linha+5);
-// 								printf("ID Emprestimo: %d", Emp.id_emprestimo);
-// 								gotoxy(52, linha+6);
-// 								printf("Livro: %s", Liv.titulo);
-// 								i++;
-// 							}
-// 						}
-// 					}
-// 					if(localiza != 1){
-// 						textcolor(4);
-// 						gotoxy(22, 28);
-// 						printf("Nenhum emprestimo registrado!");
-// 						Sleep(1500);
-// 					}
-// 				}
-// 			}
-// 			getch();
-// 			limparLinha();
-// 			printf("ID da pessoa: ");
-// 			scanf("%d", &Pess.id_pessoa);
-// 		}
-// 		fclose(pessoa);
-// 		fclose(emprestimo);
-// 		fclose(livro);
+                gotoxy(52, 8);
+                printf("Dados do Emprestimo");
+                gotoxy(52, 9);
+                printf("ID: %d", Pess.id_pessoa);
+                gotoxy(52, 10);
+                printf("Nome: %s", Pess.nome);
+
+                localizou = 0;
+                fseek(emprestimo, 0, SEEK_SET);
+                while (fread(&Emp, sizeof(TpEmprestimo), 1, emprestimo)) {
+                    if (Emp.id_pessoa == Pess.id_pessoa) {
+                        localizou = 1;
+                        fseek(livro, 0, SEEK_SET);
+                        while (fread(&Liv, sizeof(TpLivro), 1, livro)) {
+                            if (Liv.id_livro == Emp.id_livro) {
+                                linha = 12;
+                                gotoxy(52, linha + 1);
+                                printf("ID Emprestimo: %d", Emp.id_emprestimo);
+                                gotoxy(52, linha + 2);
+                                printf("Livro: %s", Liv.titulo);
+                                gotoxy(52, linha + 3);
+                                printf("Ano: %d", Liv.ano_publicacao);
+                                Sleep(3000);
+                                limparArea(51, 5, 61, 20);
+                            }
+                        }
+                    }
+                }
+
+                if (localizou != 1) {
+                    textcolor(4);
+                    gotoxy(22, 28);
+                    printf("Nenhum emprestimo registrado!");
+                    Sleep(1500);
+                }
+            }
+            getch();
+            limparLinha(24, 28, 50);
+            printf("ID da pessoa: ");
+            scanf("%d", &Pess.id_pessoa);
+        }
+    }
+    fclose(pessoa);
+    fclose(emprestimo);
+    fclose(livro);
+    limparArea(51, 5, 61, 20);
+}
+
+
+
+void exibeLivroAutor(void) {
+    TpAutor Aut;
+    TpLivro Liv;
+    TpLivroAutor LivAut;
+    int auxId, pos;
+
+    FILE *autor = fopen("Autor.dat", "rb");
+    FILE *livro = fopen("Livro.dat", "rb");
+    FILE *livroAutor = fopen("LivroAutor.dat", "rb");
+
+    if (autor == NULL || livro == NULL || livroAutor == NULL) {
+        textcolor(4);
+        gotoxy(22, 28);
+        printf("Erro ao abrir o arquivo\n");
+        if (autor) fclose(autor);
+        if (livro) fclose(livro);
+        if (livroAutor) fclose(livroAutor);
+        Sleep(2000);
+        limparLinha(24, 28, 50);
+    } else {
+        fseek(livro, 0, SEEK_END);
+        if (ftell(livro) == 0) {
+            textcolor(4);
+            gotoxy(22, 28);
+            printf("Não há livros cadastrados para consultar!");
+            Sleep(2000);
+            limparLinha(24, 28, 50);
+        } else {
+            gotoxy(52, 7);
+            printf("Digite o ID do Autor: ");
+            gotoxy(74, 7);
+            scanf("%d", &auxId);
+
+            while (auxId != 0) {
+                fseek(livroAutor, 0, SEEK_SET);
+                fread(&LivAut, sizeof(TpLivroAutor), 1, livroAutor);
+
+                while (!feof(livroAutor)) {
+                    if (auxId == LivAut.id_autor) {
+                        pos = BuscaBinariaLivro(livro, LivAut.id_livro);
+                        if (pos != -1) {
+                            fseek(livro, pos * sizeof(TpLivro), SEEK_SET);
+                            fread(&Liv, sizeof(TpLivro), 1, livro);
+
+                            pos = BuscaBinariaAutor(autor, LivAut.id_autor);
+                            if (pos != -1) {
+                                fseek(autor, pos * sizeof(TpAutor), SEEK_SET);
+                                fread(&Aut, sizeof(TpAutor), 1, autor);
+
+                                gotoxy(52, 8);
+                                printf("ID Livro: %d", Liv.id_livro);
+                                gotoxy(52, 9);
+                                printf("Titulo Livro: %s", Liv.titulo);
+                                gotoxy(52, 10);
+                                printf("Ano: %d", Liv.ano_publicacao);
+                                gotoxy(52, 11);
+                                printf("ID Autor: %d", Aut.id_autor);
+                                gotoxy(52, 12);
+                                printf("Nome Autor: %s", Aut.nome);
+                                gotoxy(52, 13);
+                                printf("-----------------------------------");
+
+                                Sleep(2000);
+                                limparLinha(8, 13, 50); // Limpar a área de exibição
+                            }
+                        }
+                    }
+                    fread(&LivAut, sizeof(TpLivroAutor), 1, livroAutor);
+                }
+
+                textcolor(15);
+                gotoxy(52, 7);
+                printf("Digite o ID do Autor (ou [0] para sair): ");
+                gotoxy(74, 7);
+                scanf("%d", &auxId);
+            }
+        }
+    }
+
+    fclose(autor);
+    fclose(livro);
+    fclose(livroAutor);
+}
+
+void OrdenaNacionalidade (FILE * autor)
+{
+ TpAutor aut1, aut2;
+ int Qtd, a, b;
+ fseek(autor,0,2);
+ Qtd=ftell(autor) / sizeof(TpAutor);
+ for(a=0;a<Qtd-1;a++)
+  for(b=a+1;b<Qtd;b++)
+  {
+   fseek(autor,a*sizeof(TpAutor),0);
+   fread(&aut1,sizeof(TpAutor),1,autor);
+   fseek(autor,b*sizeof(TpAutor),0);
+   fread(&aut2,sizeof(TpAutor),1,autor);
+   if(stricmp(aut1.nacionalidade,aut2.nacionalidade)>0){
+    fseek(autor,a*sizeof(TpAutor),0);
+    fwrite(&aut2,sizeof(TpAutor),1,autor);
+    fseek(autor,b*sizeof(TpAutor),0);
+    fwrite(&aut1,sizeof(TpAutor),1,autor);
+   }
+  }
+}
+
+// void RelatorioLetraAutor(void) {
+//     int achou;
+//     char aux;
+//     TpAutor Aut;
+
+//     FILE *autor = fopen("Autor.dat", "rb+");
+
+//     if(autor == NULL) {
+//         textcolor(4);
+//         gotoxy(37, 13);
+//         printf("Erro ao abrir o arquivo de autores!\n");
+//     }else{
+// 	limparArea(51, 5, 61, 20);
+//     textcolor(2);
+//     gotoxy(40, 10);
+//     printf("RELATORIO AUTORES");
+//     textcolor(15);
+    
+//     fseek(autor, 0, SEEK_END);
+//     if (ftell(autor) / sizeof(TpAutor) == 0) {
+//         gotoxy(37, 13);
+//         textcolor(4);
+//         printf("Nao ha cadastro de autores!!");
+//         getch();
+//         textcolor(15);
+//     } else {
+//         // OrdenaNacionalidade(autor); // Chame a função para ordenar autores, se necessário
+//         gotoxy(37, 12);
+//         printf("Digite a letra inicial do autor: ");
+//         scanf(" %c", &aux);
+        
+//         while (aux != '0') {
+//             achou = 0;
+//             int y = 14;
+//             fseek(autor, 0, SEEK_SET);
+//             fread(&Aut, sizeof(TpAutor), 1, autor);
+
+//             while (!feof(autor)) {
+//                 if (toupper(aux) == toupper(Aut.nome[0])) {
+//                     achou = 1;
+//                     gotoxy(37, y);
+//                     printf("Autor: %s | Nacionalidade: %s", Aut.nome, Aut.nacionalidade);
+//                     y++;
+//                 }
+//                 fread(&Aut, sizeof(TpAutor), 1, autor);
+//             }
+
+//             if (achou != 1) {
+//                 gotoxy(37, 15);
+//                 textcolor(4);
+//                 printf("Autor nao cadastrado!!");
+//                 textcolor(15);
+//             }
+            
+//             getch();
+//             limparLinha(24, 28, 50);
+//             gotoxy(52, 12);
+//             printf("Digite a letra inicial do autor: ");
+//             scanf(" %c", &aux);
+//         }
 // 	}
+
+//     fclose(autor);
 // }
 
-
-// void exibeLivroAutor (void){
-// 	TpAutor Aut;
-// 	TpLivroAutor LivAut;
-// 	int auxId;
-
-// 	 FILE * autor = fopen("Autor.dat", "rb");
-// 	 FILE * Liv = fopen("Livro.dat", "rb");
-// 	 FILE * livroAutor = fopen("LivroAutor.dat", "rb");
-
-// 	if (autor == NULL || livroAutor == NULL){
-// 		textcolor(4);
-//         gotoxy(22, 28); printf("Erro ao abrir o arquivo\n");
-//         fclose(ExcluiPessoa);
-//         Sleep(2000);
-//         limparLinha(24, 28, 50);
-// 	} else {
-// 		fseek(Livro,0,2);
-// 		if(ftell(Livro)==0){
-// 			textcolor(4);
-// 			gotoxy(22,28); printf("Não há livros cadastrados para consular!");
-// 			Sleep(2000);
-// 			limparLinha(24, 28, 50);
-// 		} else {
-// 			gotoxy(52,7); printf("Digite o ID do Autor: ");
-// 			gotoxy(74,7); scanf("%d", &auxId);
-// 			fseek(autor, 0, 0);
-// 			fread(&LivAut, sizeof(TpLivroAutor), 1, autor);
-// 			while(!feof(autor)){
-// 				int pos;
-// 				if(auxId == LivAut.id_autor){
-// 					pos = BuscaBinariaLivro(livro, LivAut.id_livro);
-// 					fseek(Livro, pos *sizeof(TpLivro),0);
-// 					fread(&Liv, sizeof(TpLivro),1,livro);
-// 					pos = BuscaBinariaAutor(autor,LivAut.id_autor);
-// 					fseek(Autor,pos *sizeof(TpAutor),0);
-// 					fread(&Aut, sizeof(TpAutor),1,autor);
-// 					gotoxy(52, linha);
-// 					printf("ID Livro: %d", Liv.id_livro);
-// 					gotoxy(52, linha + 1);
-// 					printf("Titulo Livro: %s", Liv.titulo);
-// 					gotoxy(52, linha + 2);
-// 					printf("Ano: %d", Liv.ano_publicacao);
-// 					gotoxy(52, linha + 3);
-// 					printf("ID Autor: %d", Aut.id_autor);
-// 					gotoxy(52, linha + 4);
-// 					printf("Nome Autor: %s", Aut.nome);
-// 					gotoxy(52, linha + 5);
-// 					printf("-----------------------------------");
-// 					Sleep(2000);
-// 					LimparArea(51, 5, 61, 20);
-// 				}
-// 				textcolor(15);
-// 				gotoxy(52,7); printf("Digite o ID do Autor: ");
-// 				gotoxy(74,7); scanf("%d", &auxId);
-// 			}
-// 		}
-// 		fclose(autor);
-// 		fclose(livro);
-// 		fclose(livroAutor);
-// 		LimparArea(51, 5, 61, 20);
-// 	}
-// 	fclose(autor);
-// 	fclose(livro);
-// 	fclose(livroAutor);
-// 	LimparArea(51, 5, 61, 20);
-// }
-
-// void OrdenaNacionalidade (FILE * autor)
-// {
-//  TpAutores aut1, aut2;
-//  int Qtd, a, b;
-//  fseek(autor,0,2);
-//  Qtd=ftell(autor) / sizeof(TpAutores);
-//  for(a=0;a<Qtd-1;a++)
-//   for(b=a+1;b<Qtd;b++)
-//   {
-//    fseek(autor,a*sizeof(TpAutores),0);
-//    fread(&aut1,sizeof(TpAutores),1,autor);
-//    fseek(autor,b*sizeof(TpAutores),0);
-//    fread(&aut2,sizeof(TpAutores),1,autor);
-//    if(stricmp(aut1.nacionalidade,aut2.nacionalidade)>0){
-//     fseek(autor,a*sizeof(TpAutores),0);
-//     fwrite(&aut2,sizeof(TpAutores),1,autor);
-//     fseek(autor,b*sizeof(TpAutores),0);
-//     fwrite(&aut1,sizeof(TpAutores),1,autor);
-//    }
-//   }
-// }
-
-// void RelatorioLetraAutor (void){
-// 	int achou;
-// 	char aux;
-// 	TpAutor Aut;
-
-// 	FILE * autor = fopen("Autor.dat","rb+");
-// 	LimparArea(51, 5, 61, 20);
-// 	textcolor(2);
-// 	gotoxy(40,10);
-// 	printf("RELATORIO AUTORES");
-// 	textcolor(15);
-// 	fseek(autor,0,2);
-// 	if(ftell(autor) / sizeof(TpAutores)==0) {
-// 		gotoxy(37,13);
-// 		textcolor(RED);
-// 		printf("Nao ha cadastro de autores!!");
-// 		getch();
-// 		textcolor(15);
-// 	} else {
-// 		OrdenaNacionalidade(autor);
-// 		gotoxy(37,12);
-// 		printf("Digite a letra inicial do autor: ");
-// 		scanf(" %c",&aux);
-// 		while(aux != '0'){
-// 			achou=0;
-// 			int y=14;
-// 			fseek(autor,0,0);
-// 			fread(&Aut,sizeof(TpAutores),1,autor);
-// 			while(!feof(autor)){
-// 				if(toupper(aux)==toupper(Aut.nome[0])){
-// 					achou=1;
-// 					gotoxy(37,y);
-// 					printf("Autor: %s | Nacionalidade: %s",Aut.nome, Aut.nacionalidade);
-// 					y++;
-// 				}
-// 				fread(&Aut, sizeof(TpAutores),1, autor);
-// 			}
-// 			if(achou!=1){
-// 				gotoxy(37,15);
-// 				textcolor(RED);
-// 				printf("Autor nao cadastrado!!");
-// 				textcolor(15);
-// 			}
-// 			getch();
-// 			limparLinha(24, 28, 50);
-// 			gotoxy(37,12);
-// 			printf("Digite a letra inicial do autor: ");
-// 			scanf(" %c",&aux);
-// 		}
-// 		fclose(autor);
-// 	}
-// }
-
-// void GerarRelatorioEmprestimos(void) {
-
-// 	TpPessoa Pess;
+// void GerarRelatorioEmprestimos(void){
+//     TpPessoa Pess;
 //     TpEmprestimo Emp;
 //     TpLivro LivroReg;
 
-//     FILE * Pessoa = fopen("Pessoas.dat", "rb");
-//     FILE * Empres = fopen("Emprestimos.dat", "rb");
-//     FILE * Livro = fopen("Livros.dat", "rb");
-    
+//     FILE *Pessoa = fopen("Pessoas.dat", "rb");
+//     FILE *Empres = fopen("Emprestimos.dat", "rb");
+//     FILE *Livro = fopen("Livros.dat", "rb");
+
 //     if (Pessoa == NULL || Empres == NULL || Livro == NULL) {
-// 		textcolor(4);
-//         gotoxy(22, 28); printf("Erro ao abrir o arquivo\n");
+//         textcolor(4);
+//         gotoxy(22, 28);
+//         printf("Erro ao abrir o arquivo\n");
 //         Sleep(2000);
 //         limparLinha(24, 28, 50);
-//     	fclose(Pessoa);
-//         fclose(Empres);
-//         fclose(Livro);
-//     } else {
-// 		gotoxy(52, 7); printf("Relatório de Empréstimos por Pessoa:\n");
+//         if (Pessoa) fclose(Pessoa);
+//         if (Empres) fclose(Empres);
+//         if (Livro) fclose(Livro);
+        
+//     }
 
-// 		while (fread(&Pess, sizeof(TpPessoa), 1, Pessoa) == 1) {
-// 			if (Pess.status == 1){  
-// 				gotoxy(52, 8); printf("ID Pessoa: %d", Pess.id_pessoa);
-// 				gotoxy(52, 9);printf("Nome: %s", Pess.nome);
-// 				gotoxy(52, 10); printf("Empréstimos:");
+//     Limpararea(51, 5, 61, 20);
+//     gotoxy(52, 7);
+//     printf("Relatório de Empréstimos por Pessoa:\n");
 
-// 				int encontrouEmprestimos = 0;
-// 				fseek(Empres, 0, SEEK_SET);
-				
-// 				while (fread(&Emp, sizeof(TpEmprestimo), 1, Empres) == 1) {
-// 					if (Emp.status == 1 && Emp.id_pessoa == Pess.id_pessoa) {
-// 						encontrouEmprestimos = 1;
+//     while (fread(&Pess, sizeof(TpPessoa), 1, Pessoa) == 1) {
+//         if (Pess.status == 1) {  // Apenas pessoas ativas
+//             gotoxy(52, 9);
+//             printf("ID Pessoa: %d", Pess.id_pessoa);
+//             gotoxy(52, 10);
+//             printf("Nome: %s", Pess.nome);
+//             gotoxy(52, 11);
+//             printf("Empréstimos:");
 
-// 						fseek(Livro, 0, SEEK_SET); 
-// 						while (fread(&LivroReg, sizeof(TpLivro), 1, Livro) == 1) {
-// 							if (LivroReg.id_livro == Emp.id_livro) {
-// 								printf("ID Empréstimo: %d\n", Emp.id_emprestimo);
-// 								printf("Livro: %s\n", LivroReg.titulo);
-// 								printf("Ano Publicação: %d\n", LivroReg.ano_publicacao);
-// 							}
-// 						}
-// 					}
-// 				}
-// 				if (!encontrouEmprestimos) {
-// 					printf("Nenhum empréstimo registrado!");
-// 				}
-// 				fseek(Empres, 0, SEEK_SET);
-//         	}
-//     	}
-// 	}
+//             int encontrouEmprestimos = 0;
+//             fseek(Empres, 0, SEEK_SET);
+
+//             while (fread(&Emp, sizeof(TpEmprestimo), 1, Empres) == 1) {
+//                 if (Emp.status == 1 && Emp.id_pessoa == Pess.id_pessoa) {
+//                     encontrouEmprestimos = 1;
+
+//                     fseek(Livro, 0, SEEK_SET);
+//                     while (fread(&LivroReg, sizeof(TpLivro), 1, Livro) == 1) {
+//                         if (LivroReg.id_livro == Emp.id_livro) {
+//                             gotoxy(52, 12);
+//                             printf("ID Empréstimo: %d", Emp.id_emprestimo);
+//                             gotoxy(52, 13);
+//                             printf("Livro: %s", LivroReg.titulo);
+//                             gotoxy(52, 14);
+//                             printf("Ano Publicação: %d", LivroReg.ano_publicacao);
+                            
+//                         }
+//                     }
+//                 }
+//             }
+
+//             if (!encontrouEmprestimos) {
+//                 gotoxy(52, 15);
+//                 textcolor(4);
+//                 printf("Nenhum empréstimo registrado!");
+//                 textcolor(15);
+//             }
+
+//             Sleep(2000);
+//            limparArea(51, 5, 61, 20); /
+//         }
+//     }
+
 //     fclose(Pessoa);
 //     fclose(Empres);
 //     fclose(Livro);
+// }
+
+// void relatorioCompleto(void) {
+//     TpPessoa Pess;
+//     TpEmprestimo Emp;
+//     TpLivro Liv;
+
+//     FILE *pessoa = fopen("Pessoas.dat", "rb");
+//     FILE *emprestimo = fopen("Emprestimo.dat", "rb");
+//     FILE *livro = fopen("Livro.dat", "rb");
+
+//     if (!pessoa || !emprestimo || !livro){
+//         textcolor(4);
+// 	 	printf("Erro ao abrir o arquivo\n");
+// 		fclose(excluiEmprestimo);
+// 		Sleep(2000);
+// 		limparLinha(24, 28, 50);
+// 	 	fclose(excluiEmprestimo);
+// 	} else {
+// 		printf("RELATÓRIO COMPLETO DE DADOS\n");
+
+//     	fseek(pessoa, 0, SEEK_SET);
+//     	while (fread(&Pess, sizeof(TpPessoa), 1, pessoa)) {
+//         printf("ID Pessoa: %d\n", Pess.id_pessoa);
+//         printf("Nome: %s\n", Pess.nome);
+
+//         int emprestimosEncontrados = 0;
+//         fseek(emprestimo, 0, SEEK_SET);
+//         while (fread(&Emp, sizeof(TpEmprestimo), 1, emprestimo)) {
+//             if (Emp.id_pessoa == Pess.id_pessoa) {
+//                 emprestimosEncontrados = 1;
+//                 printf("Empréstimo ID: %d", Emp.id_emprestimo);
+//                 printf("Data do Empréstimo: %s", Emp.data_emprestimo);
+
+//                 fseek(livro, 0, SEEK_SET);
+//                 while (fread(&Liv, sizeof(TpLivro), 1, livro)) {
+//                     if (Liv.id_livro == Emp.id_livro) {
+//                         printf("Livro ID: %d", Liv.id_livro);
+//                         printf("Título: %s", Liv.titulo);
+//                         printf("Autor: %s", Liv.autor);
+//                     }
+//                 }
+//             }
+//         }
+
+//         if (!emprestimosEncontrados) {
+//             textcolor(4);
+// 			printf("Nenhum empr´stimo encontrado");
+// 			fclose(excluiEmprestimo);
+// 			Sleep(2000);
+// 			limparLinha(24, 28, 50);
+// 			fclose(excluiEmprestimo);
+//         }
+//     }
+
+//     fclose(pessoa);
+//     fclose(emprestimo);
+//     fclose(livro);
+// 	}
+
+    
 // }
