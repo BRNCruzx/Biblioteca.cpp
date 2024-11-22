@@ -522,8 +522,8 @@ void CadastroLivro(void){
 				gotoxy(53,8);printf("TITULO:");
 				fflush(stdin);
 				gotoxy(60,8);gets(Reg.titulo);
-				gotoxy(53,9);printf("Ano da publicacao:");
-				gotoxy(72,9);scanf("%d", &Reg.ano_publicacao);
+				gotoxy(52,9);printf("Ano da publicacao:");
+				gotoxy(70,9);scanf("%d", &Reg.ano_publicacao);
 				Reg.status = 1;
 				fseek(Livro,0,2);
 				fwrite(&Reg , sizeof(TpLivro),1,Livro);
